@@ -1,0 +1,43 @@
+:root {
+  /* Background colors */
+  --color-bg-primary: #0a0a0a;
+  --color-bg-secondary: #1a1a1a;
+  --color-bg-panel: #0f0f0f;
+  
+  /* Text colors */
+  --color-text-primary: #00ff00;
+  --color-text-secondary: #00cc00;
+  --color-text-inactive: #006600;
+  
+  /* Accent colors */
+  --color-accent-hover: rgba(0, 255, 0, 0.3);
+  --color-accent-border: rgba(0, 255, 0, 0.5);
+  --color-accent-error: #ff0066;
+  
+  /* Typography */
+  --font-family-primary: 'Courier New', 'Consolas', monospace;
+  --font-size-base: 14px;
+  --font-size-header: 18px;
+  --font-size-small: 12px;
+  
+  /* Spacing */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  
+  /* Borders and radius */
+  --border-width: 1px;
+  --border-radius: 2px;
+  
+  /* Transitions */
+  --transition-duration: 150ms;
+  --transition-timing: ease-in-out;
+  
+  /* Z-index layers */
+  --z-index-base: 0;
+  --z-index-panel: 10;
+  --z-index-overlay: 100;
+  --z-index-modal: 1000;
+}

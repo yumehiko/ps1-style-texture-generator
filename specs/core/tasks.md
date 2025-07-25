@@ -7,7 +7,7 @@
 
 ### インフラストラクチャとセットアップ
 
-- [ ] 1. Electronプロジェクトの初期セットアップ
+- [x] 1. Electronプロジェクトの初期セットアップ
   - Electron + React + TypeScript + Viteの基本構成作成
   - package.jsonの設定
   - tsconfig.jsonの設定
@@ -16,7 +16,7 @@
   - lint、型チェック、ビルドの実行
   - _要件: 3.4技術要件_
 
-- [ ] 2. プロジェクトディレクトリ構造の作成
+- [x] 2. プロジェクトディレクトリ構造の作成
   - src/main、src/renderer、src/shared、src/assetsディレクトリ作成
   - 各ディレクトリにindex.tsファイル配置
   - CSS変数とグローバルスタイルの初期設定 (src/renderer/styles)

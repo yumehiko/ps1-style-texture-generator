@@ -24,7 +24,7 @@
   - lint実行
   - _要件: 3.4技術要件_
 
-- [ ] 3. Electronメインプロセスの実装
+- [x] 3. Electronメインプロセスの実装
   - src/main/index.tsの実装
   - BrowserWindow設定（macOS対応）
   - アプリケーションメニューの基本構成 (src/main/menu.ts)

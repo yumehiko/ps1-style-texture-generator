@@ -7,9 +7,10 @@ import {
   Preview3D,
   ParameterControls,
   SaveButton,
-  HelpOverlay
+  HelpOverlay,
+  ToastContainer
 } from './components'
-import { useSaveImage, useImageProcessor, useKeyboardShortcuts } from './hooks'
+import { useSaveImage, useImageProcessor, useKeyboardShortcuts, useToast } from './hooks'
 import { fileService } from './services'
 import { getErrorInfo, ErrorMessages } from './utils/errorMessages'
 import './styles/globals.css'
@@ -18,6 +19,7 @@ const AppContent: React.FC = () => {
   const { state, dispatch } = useAppContext()
   const { handleSave, isSaving, saveMessage, canSave } = useSaveImage()
   const { clearError } = useImageProcessor()
+  const { toasts, showSuccess, showError, removeToast } = useToast()
   
   // ファイル選択処理（ダイアログ経由）
   const handleFileDialog = useCallback(async () => {
@@ -26,9 +28,13 @@ const AppContent: React.FC = () => {
       const fileName = result.filePath ? result.filePath.split('/').pop() : undefined
       dispatch({ type: 'SET_ORIGINAL_IMAGE', payload: { imageData: result.data, fileName } })
     } else if (result.error) {
-      dispatch({ type: 'SET_ERROR', payload: getErrorInfo(result.error) })
+      const errorInfo = getErrorInfo(result.error)
+      dispatch({ type: 'SET_ERROR', payload: errorInfo })
+      if (!errorInfo.recoverable) {
+        showError(errorInfo.message)
+      }
     }
-  }, [dispatch])
+  }, [dispatch, showError])
   
   // ファイル選択処理（ドラッグ&ドロップ経由）
   const handleFileSelect = useCallback(async (file: File) => {
@@ -119,6 +125,17 @@ const AppContent: React.FC = () => {
     onReset: handleRemove
   })
   
+  // 保存メッセージの変更を監視してトーストを表示
+  useEffect(() => {
+    if (saveMessage) {
+      if (saveMessage.type === 'success') {
+        showSuccess(saveMessage.text)
+      } else {
+        showError(saveMessage.text)
+      }
+    }
+  }, [saveMessage, showSuccess, showError])
+  
   // ObjectURLのクリーンアップ
   useEffect(() => {
     return () => {
@@ -203,6 +220,7 @@ const AppContent: React.FC = () => {
         />
       </footer>
       <HelpOverlay />
+      <ToastContainer toasts={toasts} onClose={removeToast} />
     </div>
   )
 }

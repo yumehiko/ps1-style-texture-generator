@@ -31,12 +31,9 @@ class FileService {
       const result = await window.electronAPI.openFile()
       
       if (result.canceled) {
+        // キャンセルは正常な操作なのでエラーとして扱わない
         return {
-          success: false,
-          error: {
-            type: 'file-read',
-            message: 'ファイル選択がキャンセルされました'
-          }
+          success: false
         }
       }
       
@@ -98,12 +95,9 @@ class FileService {
       const result = await window.electronAPI.saveFile(pngData)
       
       if (result.canceled) {
+        // キャンセルは正常な操作なのでエラーとして扱わない
         return {
-          success: false,
-          error: {
-            type: 'file-save',
-            message: 'ファイル保存がキャンセルされました'
-          }
+          success: false
         }
       }
       

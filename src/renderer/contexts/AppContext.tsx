@@ -39,7 +39,7 @@ const initialState: AppState = {
   processedImage: null,
   originalFileName: null,
   parameters: {
-    resolution: 256,
+    resolution: 128,
     colorDepth: 16,
     dithering: true
   },

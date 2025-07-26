@@ -1,6 +1,5 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useState, useEffect } from 'react'
 import { ProcessingParams } from '../../types/processing'
-import { Tooltip } from '../Tooltip'
 import styles from './ParameterControls.module.css'
 
 interface ParameterControlsProps {
@@ -11,16 +10,12 @@ interface ParameterControlsProps {
 
 // スライダーの設定
 const RESOLUTION_CONFIG = {
-  min: 32,
-  max: 512,
-  step: 32,
+  steps: [16, 32, 48, 64, 96, 128, 256, 512],
   label: 'Resolution (px)'
 }
 
 const COLOR_DEPTH_CONFIG = {
-  min: 4,
-  max: 256,
-  step: 4,
+  steps: [4, 8, 16, 24, 32, 64, 128],
   label: 'Color Depth'
 }
 
@@ -29,19 +24,71 @@ export const ParameterControls: React.FC<ParameterControlsProps> = ({
   isDisabled = false,
   onParameterChange
 }) => {
+  // 数値入力フィールドの状態
+  const [resolutionInput, setResolutionInput] = useState(parameters.resolution.toString())
+  const [colorDepthInput, setColorDepthInput] = useState(parameters.colorDepth.toString())
+
+  // 現在の値からインデックスを取得
+  const resolutionIndex = RESOLUTION_CONFIG.steps.indexOf(parameters.resolution)
+  const colorDepthIndex = COLOR_DEPTH_CONFIG.steps.indexOf(parameters.colorDepth)
+
+
+  // パラメータ変更時に入力フィールドを更新
+  useEffect(() => {
+    setResolutionInput(parameters.resolution.toString())
+  }, [parameters.resolution])
+
+  useEffect(() => {
+    setColorDepthInput(parameters.colorDepth.toString())
+  }, [parameters.colorDepth])
+
   const handleResolutionChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseInt(e.target.value, 10)
-    if (onParameterChange) {
+    const index = parseInt(e.target.value, 10)
+    const value = RESOLUTION_CONFIG.steps[index]
+    if (value !== undefined && onParameterChange) {
       onParameterChange({ resolution: value })
     }
   }, [onParameterChange])
 
+  const handleResolutionInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setResolutionInput(e.target.value)
+  }, [])
+
+  const handleResolutionInputBlur = useCallback(() => {
+    const value = parseInt(resolutionInput, 10)
+    if (!isNaN(value)) {
+      const clampedValue = Math.max(RESOLUTION_CONFIG.steps[0], Math.min(RESOLUTION_CONFIG.steps[RESOLUTION_CONFIG.steps.length - 1], value))
+      if (onParameterChange) {
+        onParameterChange({ resolution: clampedValue })
+      }
+    } else {
+      setResolutionInput(parameters.resolution.toString())
+    }
+  }, [resolutionInput, parameters.resolution, onParameterChange])
+
   const handleColorDepthChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseInt(e.target.value, 10)
-    if (onParameterChange) {
+    const index = parseInt(e.target.value, 10)
+    const value = COLOR_DEPTH_CONFIG.steps[index]
+    if (value !== undefined && onParameterChange) {
       onParameterChange({ colorDepth: value })
     }
   }, [onParameterChange])
+
+  const handleColorDepthInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setColorDepthInput(e.target.value)
+  }, [])
+
+  const handleColorDepthInputBlur = useCallback(() => {
+    const value = parseInt(colorDepthInput, 10)
+    if (!isNaN(value)) {
+      const clampedValue = Math.max(COLOR_DEPTH_CONFIG.steps[0], Math.min(COLOR_DEPTH_CONFIG.steps[COLOR_DEPTH_CONFIG.steps.length - 1], value))
+      if (onParameterChange) {
+        onParameterChange({ colorDepth: clampedValue })
+      }
+    } else {
+      setColorDepthInput(parameters.colorDepth.toString())
+    }
+  }, [colorDepthInput, parameters.colorDepth, onParameterChange])
 
   const handleDitheringChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     if (onParameterChange) {
@@ -49,39 +96,40 @@ export const ParameterControls: React.FC<ParameterControlsProps> = ({
     }
   }, [onParameterChange])
 
-  // スライダーの位置計算
-  const getSliderPercentage = (value: number, min: number, max: number) => {
-    return ((value - min) / (max - min)) * 100
-  }
 
   return (
     <div className={styles.container}>
       {/* 長辺ピクセル数スライダー */}
-      <Tooltip content="画像の長辺の最大ピクセル数を設定します。アスペクト比は維持されます。">
-        <div className={styles.control}>
+      <div className={styles.control}>
           <div className={styles.label}>
             <span>{RESOLUTION_CONFIG.label}</span>
-            <span className={styles.value}>{parameters.resolution}</span>
+            <input
+              type="number"
+              className={styles.numberInput}
+              value={resolutionInput}
+              onChange={handleResolutionInputChange}
+              onBlur={handleResolutionInputBlur}
+              min={RESOLUTION_CONFIG.steps[0]}
+              max={RESOLUTION_CONFIG.steps[RESOLUTION_CONFIG.steps.length - 1]}
+              disabled={isDisabled}
+              aria-label={`${RESOLUTION_CONFIG.label} input`}
+            />
           </div>
         <div className={styles.slider}>
           <div className={styles.sliderTrack} />
           <div 
             className={styles.sliderFill}
             style={{ 
-              width: `${getSliderPercentage(
-                parameters.resolution, 
-                RESOLUTION_CONFIG.min, 
-                RESOLUTION_CONFIG.max
-              )}%` 
+              width: `calc(${resolutionIndex >= 0 ? (resolutionIndex / (RESOLUTION_CONFIG.steps.length - 1)) * 100 : 0}% - 16px)` 
             }}
           />
           <input
             type="range"
             className={styles.sliderInput}
-            min={RESOLUTION_CONFIG.min}
-            max={RESOLUTION_CONFIG.max}
-            step={RESOLUTION_CONFIG.step}
-            value={parameters.resolution}
+            min={0}
+            max={RESOLUTION_CONFIG.steps.length - 1}
+            step={1}
+            value={resolutionIndex >= 0 ? resolutionIndex : 0}
             onChange={handleResolutionChange}
             disabled={isDisabled}
             aria-label={RESOLUTION_CONFIG.label}
@@ -89,43 +137,43 @@ export const ParameterControls: React.FC<ParameterControlsProps> = ({
           <div 
             className={styles.sliderThumb}
             style={{ 
-              left: `${getSliderPercentage(
-                parameters.resolution, 
-                RESOLUTION_CONFIG.min, 
-                RESOLUTION_CONFIG.max
-              )}%` 
+              left: `calc(8px + ${resolutionIndex >= 0 ? (resolutionIndex / (RESOLUTION_CONFIG.steps.length - 1)) : 0} * (100% - 16px))` 
             }}
           />
         </div>
       </div>
-      </Tooltip>
 
       {/* 色数選択スライダー */}
-      <Tooltip content="テクスチャで使用する色数を設定します。低い値でよりレトロな見た目になります。">
-        <div className={styles.control}>
+      <div className={styles.control}>
         <div className={styles.label}>
           <span>{COLOR_DEPTH_CONFIG.label}</span>
-          <span className={styles.value}>{parameters.colorDepth}</span>
+          <input
+            type="number"
+            className={styles.numberInput}
+            value={colorDepthInput}
+            onChange={handleColorDepthInputChange}
+            onBlur={handleColorDepthInputBlur}
+            min={COLOR_DEPTH_CONFIG.steps[0]}
+            max={COLOR_DEPTH_CONFIG.steps[COLOR_DEPTH_CONFIG.steps.length - 1]}
+            disabled={isDisabled}
+            aria-label={`${COLOR_DEPTH_CONFIG.label} input`}
+          />
         </div>
         <div className={styles.slider}>
           <div className={styles.sliderTrack} />
           <div 
             className={styles.sliderFill}
             style={{ 
-              width: `${getSliderPercentage(
-                parameters.colorDepth, 
-                COLOR_DEPTH_CONFIG.min, 
-                COLOR_DEPTH_CONFIG.max
-              )}%` 
+              width: `calc(${colorDepthIndex >= 0 ? (colorDepthIndex / (COLOR_DEPTH_CONFIG.steps.length - 1)) * 100 : 0}% - 16px)` 
             }}
           />
           <input
             type="range"
             className={styles.sliderInput}
-            min={COLOR_DEPTH_CONFIG.min}
-            max={COLOR_DEPTH_CONFIG.max}
-            step={COLOR_DEPTH_CONFIG.step}
-            value={parameters.colorDepth}
+            min={0}
+            max={COLOR_DEPTH_CONFIG.steps.length - 1}
+            step={1}
+            value={colorDepthIndex >= 0 ? colorDepthIndex : 0}
             onChange={handleColorDepthChange}
             disabled={isDisabled}
             aria-label={COLOR_DEPTH_CONFIG.label}
@@ -133,22 +181,14 @@ export const ParameterControls: React.FC<ParameterControlsProps> = ({
           <div 
             className={styles.sliderThumb}
             style={{ 
-              left: `${getSliderPercentage(
-                parameters.colorDepth, 
-                COLOR_DEPTH_CONFIG.min, 
-                COLOR_DEPTH_CONFIG.max
-              )}%` 
+                left: `calc(8px + ${colorDepthIndex >= 0 ? (colorDepthIndex / (COLOR_DEPTH_CONFIG.steps.length - 1)) : 0} * (100% - 16px))` 
             }}
           />
         </div>
       </div>
-      </Tooltip>
-
-      <div className={styles.divider} />
 
       {/* ディザリングチェックボックス */}
-      <Tooltip content="Floyd-Steinbergディザリングを適用します。グラデーションをより滑らかに表現できます。" position="bottom">
-        <label className={styles.checkbox}>
+      <label className={styles.checkbox}>
         <input
           type="checkbox"
           className={styles.checkboxInput}
@@ -159,7 +199,6 @@ export const ParameterControls: React.FC<ParameterControlsProps> = ({
         <span className={styles.checkboxVisual} />
         <span className={styles.checkboxLabel}>Dithering</span>
       </label>
-      </Tooltip>
     </div>
   )
 }

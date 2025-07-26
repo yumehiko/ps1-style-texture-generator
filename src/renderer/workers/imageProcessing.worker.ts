@@ -104,8 +104,8 @@ ctx.addEventListener('message', async (event) => {
       throw new Error('Invalid image data');
     }
     
-    if (params.resolution < 32 || params.resolution > 512) {
-      throw new Error('Resolution must be between 32 and 512');
+    if (params.resolution < 16 || params.resolution > 512) {
+      throw new Error('Resolution must be between 16 and 512');
     }
     
     if (params.colorDepth < 4 || params.colorDepth > 256) {

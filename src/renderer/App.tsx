@@ -151,56 +151,54 @@ const AppContent: React.FC = () => {
       </header>
       
       <main className="app-main" role="main">
-        <div className="app-grid">
-          {/* 左側パネル: 入力とコントロール */}
-          <section className="panel panel-left" aria-label="入力とパラメータ設定">
-            <div className="input-section">
-              <div>
-                <div className="panel-header">
-                  <h2>INPUT</h2>
-                </div>
-                <div className="panel-content">
-                  <ImageInput 
-                    hasImage={!!state.originalImage}
-                    fileName={state.originalFileName}
-                    imageWidth={state.originalImage?.width}
-                    imageHeight={state.originalImage?.height}
-                    isLoading={state.isProcessing}
-                    error={state.error}
-                    onFileSelect={handleFileSelect}
-                    onRemove={handleRemove}
-                    onOpenDialog={handleOpenFile}
-                    onDismissError={() => dispatch({ type: 'SET_ERROR', payload: null })}
-                  />
-                </div>
-              </div>
-              
-              <div className="parameters-section">
-                <div className="panel-header">
-                  <h2>PARAMETERS</h2>
-                </div>
-                <div className="panel-content">
-                  <ParameterControls 
-                    parameters={state.parameters}
-                    isDisabled={state.isProcessing}
-                    onParameterChange={handleParameterChange}
-                  />
-                </div>
+        <div className="app-grid-4x4">
+          {/* 左上: 2Dプレビュー */}
+          <section className="grid-cell grid-top-left" aria-label="2Dプレビュー">
+            <div className="panel">
+              <div className="panel-content">
+                <Preview2D />
               </div>
             </div>
           </section>
           
-          {/* 右側パネル: プレビュー */}
-          <section className="panel panel-right" aria-label="プレビュー">
-            <div className="panel-header">
-              <h2>PREVIEW</h2>
-            </div>
-            <div className="panel-content preview-container">
-              <div className="preview-2d">
-                <Preview2D />
-              </div>
-              <div className="preview-3d">
+          {/* 右上: 3Dプレビュー */}
+          <section className="grid-cell grid-top-right" aria-label="3Dプレビュー">
+            <div className="panel">
+              <div className="panel-content">
                 <Preview3D />
+              </div>
+            </div>
+          </section>
+          
+          {/* 左下: 画像入力エリア */}
+          <section className="grid-cell grid-bottom-left" aria-label="画像入力">
+            <div className="panel">
+              <div className="panel-content">
+                <ImageInput 
+                  hasImage={!!state.originalImage}
+                  fileName={state.originalFileName}
+                  imageWidth={state.originalImage?.width}
+                  imageHeight={state.originalImage?.height}
+                  isLoading={state.isProcessing}
+                  error={state.error}
+                  onFileSelect={handleFileSelect}
+                  onRemove={handleRemove}
+                  onOpenDialog={handleOpenFile}
+                  onDismissError={() => dispatch({ type: 'SET_ERROR', payload: null })}
+                />
+              </div>
+            </div>
+          </section>
+          
+          {/* 右下: パラメータコントロール */}
+          <section className="grid-cell grid-bottom-right" aria-label="パラメータ設定">
+            <div className="panel">
+              <div className="panel-content">
+                <ParameterControls 
+                  parameters={state.parameters}
+                  isDisabled={state.isProcessing}
+                  onParameterChange={handleParameterChange}
+                />
               </div>
             </div>
           </section>

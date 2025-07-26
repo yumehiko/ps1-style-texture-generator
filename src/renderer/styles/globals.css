@@ -230,6 +230,39 @@ html, body {
   min-height: 0;
 }
 
+/* 4x4 Grid Layout */
+.app-grid-4x4 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: var(--spacing-md);
+  height: 100%;
+  flex: 1;
+  min-height: 0;
+}
+
+.grid-cell {
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.grid-cell .panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.grid-cell .panel-content {
+  flex: 1;
+  overflow: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+}
+
 /* Panel Styles */
 .panel {
   background-color: var(--color-bg-panel);
@@ -240,18 +273,6 @@ html, body {
   overflow: hidden;
 }
 
-.panel-left {
-  display: grid;
-  grid-template-rows: auto 1fr auto;
-  height: 100%;
-  overflow: hidden;
-}
-
-.panel-right {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-}
 
 .panel-header {
   padding: var(--spacing-sm) var(--spacing-md);
@@ -271,16 +292,6 @@ html, body {
   overflow-y: auto;
 }
 
-.panel-left .panel-content {
-  overflow-y: auto;
-  flex: 1;
-  min-height: 0;
-}
-
-.panel-right .panel-content {
-  flex: 1;
-  overflow: hidden;
-}
 
 .panel-actions {
   padding: var(--spacing-md);
@@ -333,27 +344,3 @@ html, body {
   color: var(--color-text-inactive);
 }
 
-/* Input section specific */
-.input-section {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  overflow: hidden;
-}
-
-.input-section > div:first-child {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  min-height: 0;
-  overflow: hidden;
-}
-
-.input-section > div:first-child > .panel-content {
-  flex: 1;
-  overflow-y: auto;
-}
-
-.parameters-section {
-  flex-shrink: 0;
-}

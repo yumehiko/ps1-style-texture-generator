@@ -2,7 +2,7 @@ import React from 'react';
 import { useAppContext } from '../../contexts';
 import { useCanvas } from '../../hooks/useCanvas';
 import { LoadingOverlay } from '../LoadingOverlay';
-import './Preview2D.module.css';
+import styles from './Preview2D.module.css';
 
 export const Preview2D: React.FC = () => {
   const { state } = useAppContext();
@@ -14,11 +14,11 @@ export const Preview2D: React.FC = () => {
   // エラー状態
   if (error) {
     return (
-      <div className="preview-2d-container">
-        <div className="preview-error">
-          <span className="error-icon">!</span>
-          <span className="error-text">ERROR</span>
-          <span className="error-message">{error.message}</span>
+      <div className={styles['preview-2d-container']}>
+        <div className={styles['preview-error']}>
+          <span className={styles['error-icon']}>!</span>
+          <span className={styles['error-text']}>ERROR</span>
+          <span className={styles['error-message']}>{error.message}</span>
         </div>
       </div>
     );
@@ -27,10 +27,10 @@ export const Preview2D: React.FC = () => {
   // 画像未選択状態
   if (!processedImage) {
     return (
-      <div className="preview-2d-container">
-        <div className="preview-empty">
-          <span className="empty-text">NO IMAGE</span>
-          <span className="empty-subtext">SELECT AN IMAGE TO PROCESS</span>
+      <div className={styles['preview-2d-container']}>
+        <div className={styles['preview-empty']}>
+          <span className={styles['empty-text']}>NO IMAGE</span>
+          <span className={styles['empty-subtext']}>SELECT AN IMAGE TO PROCESS</span>
         </div>
       </div>
     );
@@ -38,15 +38,15 @@ export const Preview2D: React.FC = () => {
 
   // 画像表示
   return (
-    <div className="preview-2d-container" style={{ position: 'relative' }}>
+    <div className={styles['preview-2d-container']}>
       <LoadingOverlay 
         isLoading={isProcessing}
         message="画像を処理中..."
       />
-      <div className="preview-canvas-wrapper">
+      <div className={styles['preview-canvas-wrapper']}>
         <canvas
           ref={canvasRef}
-          className="preview-canvas"
+          className={styles['preview-canvas']}
           style={{
             maxWidth: '100%',
             maxHeight: '100%',
@@ -54,17 +54,6 @@ export const Preview2D: React.FC = () => {
           }}
         />
       </div>
-      {processedImage && (
-        <div className="preview-info">
-          <span className="info-item">
-            {processedImage.width} × {processedImage.height} PX
-          </span>
-          <span className="info-separator">|</span>
-          <span className="info-item">
-            {state.parameters.colorDepth} COLORS
-          </span>
-        </div>
-      )}
     </div>
   );
 };

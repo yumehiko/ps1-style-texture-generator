@@ -24,7 +24,7 @@ export const ImageInput: React.FC<ImageInputProps> = ({
   isLoading = false,
   error = null,
   onFileSelect,
-  onRemove,
+  onRemove: _onRemove,
   onOpenDialog,
   onDismissError
 }) => {
@@ -61,23 +61,21 @@ export const ImageInput: React.FC<ImageInputProps> = ({
   }, [onFileSelect])
 
   const handleClick = useCallback(() => {
-    if (!hasImage) {
-      if (onOpenDialog) {
-        onOpenDialog()
-      } else {
-        const input = document.createElement('input')
-        input.type = 'file'
-        input.accept = 'image/*'
-        input.onchange = (e) => {
-          const target = e.target as HTMLInputElement
-          if (target.files && target.files[0] && onFileSelect) {
-            onFileSelect(target.files[0])
-          }
+    if (onOpenDialog) {
+      onOpenDialog()
+    } else {
+      const input = document.createElement('input')
+      input.type = 'file'
+      input.accept = 'image/*'
+      input.onchange = (e) => {
+        const target = e.target as HTMLInputElement
+        if (target.files && target.files[0] && onFileSelect) {
+          onFileSelect(target.files[0])
         }
-        input.click()
       }
+      input.click()
     }
-  }, [hasImage, onFileSelect, onOpenDialog])
+  }, [onFileSelect, onOpenDialog])
 
   const containerClasses = [
     styles.container,
@@ -93,7 +91,7 @@ export const ImageInput: React.FC<ImageInputProps> = ({
       onDrop={handleDrop}
       onClick={handleClick}
       role="button"
-      tabIndex={hasImage ? -1 : 0}
+      tabIndex={0}
       onKeyDown={(e) => {
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault()
@@ -147,20 +145,8 @@ export const ImageInput: React.FC<ImageInputProps> = ({
                 </span>
               </div>
             )}
+            <p className={styles.hint}>クリックして別の画像を選択</p>
           </div>
-          {onRemove && (
-            <button
-              className={styles.removeButton}
-              onClick={(e) => {
-                e.stopPropagation()
-                onRemove()
-              }}
-              aria-label="選択した画像を削除"
-              title="画像を削除 (Cmd/Ctrl + Shift + R)"
-            >
-              削除
-            </button>
-          )}
         </>
       )}
 

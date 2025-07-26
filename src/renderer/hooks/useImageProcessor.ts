@@ -13,6 +13,7 @@ export const useImageProcessor = () => {
   const { state, dispatch } = useAppContext()
   const processingTimeoutRef = useRef<number | null>(null)
   const lastProcessedParamsRef = useRef<ProcessingParams | null>(null)
+  const lastProcessedImageRef = useRef<ProcessedImageData | null>(null)
   
   /**
    * 画像を処理
@@ -80,6 +81,8 @@ export const useImageProcessor = () => {
     
     // 画像が設定されていない場合は処理しない
     if (!originalImage) {
+      lastProcessedImageRef.current = null
+      lastProcessedParamsRef.current = null
       return
     }
     
@@ -89,9 +92,13 @@ export const useImageProcessor = () => {
       lastProcessedParamsRef.current.colorDepth !== parameters.colorDepth ||
       lastProcessedParamsRef.current.dithering !== parameters.dithering
     
-    // パラメータが変更された場合のみ処理
-    if (paramsChanged) {
+    // 画像が変更されたかチェック
+    const imageChanged = lastProcessedImageRef.current !== originalImage
+    
+    // パラメータまたは画像が変更された場合に処理
+    if (paramsChanged || imageChanged) {
       debouncedProcessImage(originalImage, parameters)
+      lastProcessedImageRef.current = originalImage
     }
   }, [state, debouncedProcessImage])
   

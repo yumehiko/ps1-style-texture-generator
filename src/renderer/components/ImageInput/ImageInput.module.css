@@ -80,12 +80,21 @@
   border: 1px solid var(--color-accent-border);
 }
 
-.imageInfo {
+.imageDisplay {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: var(--spacing-sm);
-  margin-top: var(--spacing-md);
+  padding: var(--spacing-md);
+}
+
+
+.imageInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-xs);
+  margin-top: var(--spacing-sm);
 }
 
 .fileName {

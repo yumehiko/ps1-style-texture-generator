@@ -1,5 +1,6 @@
 import React from 'react'
 import type { SaveMessage } from '../../hooks'
+import styles from './SaveButton.module.css'
 
 interface SaveButtonProps {
   onSave: () => void
@@ -16,38 +17,28 @@ export const SaveButton: React.FC<SaveButtonProps> = ({
   message,
   className 
 }) => {
+  const buttonClasses = [
+    styles.button,
+    isSaving && styles.saving
+  ].filter(Boolean).join(' ')
+
+  const messageClasses = [
+    styles.message,
+    message?.type === 'error' ? styles.error : styles.success
+  ].filter(Boolean).join(' ')
+
   return (
-    <div className={className}>
+    <div className={className ? `${styles.container} ${className}` : styles.container}>
       <button 
         onClick={onSave}
         disabled={isDisabled}
-        style={{
-          padding: 'var(--spacing-sm) var(--spacing-lg)',
-          textTransform: 'uppercase',
-          letterSpacing: '1px',
-          fontWeight: 'bold',
-          backgroundColor: isDisabled ? 'var(--color-bg-secondary)' : 'var(--color-bg-primary)',
-          color: isDisabled ? 'var(--color-text-inactive)' : 'var(--color-text-primary)',
-          border: '1px solid',
-          borderColor: isDisabled ? 'var(--color-text-inactive)' : 'var(--color-text-primary)',
-          cursor: isDisabled ? 'not-allowed' : 'pointer',
-          transition: 'all var(--transition-duration) ease-in-out',
-          opacity: isSaving ? 0.7 : 1
-        }}
+        className={buttonClasses}
       >
         {isSaving ? 'SAVING...' : 'EXPORT PNG'}
       </button>
       
       {message && (
-        <div
-          style={{
-            marginTop: 'var(--spacing-sm)',
-            fontSize: '12px',
-            color: message.type === 'error' ? 'var(--color-error)' : 'var(--color-text-primary)',
-            fontFamily: 'var(--font-family-mono)',
-            animation: 'fadeIn 150ms ease-in-out'
-          }}
-        >
+        <div className={messageClasses}>
           {message.text}
         </div>
       )}

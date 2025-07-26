@@ -7,6 +7,7 @@ export interface AppState {
   // 画像データ
   originalImage: ProcessedImageData | null
   processedImage: ProcessedImageData | null
+  originalFileName: string | null  // 元画像のファイル名
   
   // 処理パラメータ
   parameters: ProcessingParams
@@ -22,7 +23,7 @@ export interface AppState {
 
 // アクションタイプ
 export type AppAction =
-  | { type: 'SET_ORIGINAL_IMAGE'; payload: ProcessedImageData }
+  | { type: 'SET_ORIGINAL_IMAGE'; payload: { imageData: ProcessedImageData; fileName?: string } }
   | { type: 'SET_PROCESSED_IMAGE'; payload: ProcessedImageData | null }
   | { type: 'UPDATE_PARAMETERS'; payload: Partial<ProcessingParams> }
   | { type: 'SET_PROCESSING'; payload: boolean }
@@ -35,6 +36,7 @@ export type AppAction =
 const initialState: AppState = {
   originalImage: null,
   processedImage: null,
+  originalFileName: null,
   parameters: {
     resolution: 256,
     colorDepth: 16,
@@ -52,7 +54,8 @@ function appReducer(state: AppState, action: AppAction): AppState {
     case 'SET_ORIGINAL_IMAGE':
       return {
         ...state,
-        originalImage: action.payload,
+        originalImage: action.payload.imageData,
+        originalFileName: action.payload.fileName || null,
         error: null
       }
     

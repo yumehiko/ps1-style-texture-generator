@@ -34,7 +34,8 @@ const colorReducer = new ColorReducer();
  */
 async function processImage(
   imageData: ImageData,
-  params: ProcessingRequest['params']
+  params: ProcessingRequest['params'],
+  requestId: string
 ): Promise<ImageData> {
   try {
     let result = imageData;
@@ -42,6 +43,7 @@ async function processImage(
     // Step 1: リサイズ処理 (30%)
     ctx.postMessage({
       type: 'progress',
+      id: requestId,
       progress: 10
     } as ProcessingResponse);
     
@@ -49,6 +51,7 @@ async function processImage(
     
     ctx.postMessage({
       type: 'progress',
+      id: requestId,
       progress: 30
     } as ProcessingResponse);
     
@@ -58,6 +61,7 @@ async function processImage(
       
       ctx.postMessage({
         type: 'progress',
+        id: requestId,
         progress: 60
       } as ProcessingResponse);
     } else {
@@ -66,6 +70,7 @@ async function processImage(
       
       ctx.postMessage({
         type: 'progress',
+        id: requestId,
         progress: 60
       } as ProcessingResponse);
     }
@@ -73,6 +78,7 @@ async function processImage(
     // 処理完了 (100%)
     ctx.postMessage({
       type: 'progress',
+      id: requestId,
       progress: 100
     } as ProcessingResponse);
     
@@ -107,7 +113,7 @@ ctx.addEventListener('message', async (event) => {
     }
     
     // 画像処理を実行
-    const result = await processImage(imageData, params);
+    const result = await processImage(imageData, params, id);
     
     // 結果を返送
     ctx.postMessage({

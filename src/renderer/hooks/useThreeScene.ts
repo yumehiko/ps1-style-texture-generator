@@ -39,8 +39,16 @@ export const useThreeScene = ({ processedImage, previewRotation }: UseThreeScene
     const currentMount = mountRef.current;
     if (!currentMount || webGLError) return;
 
-    const width = currentMount.clientWidth;
-    const height = currentMount.clientHeight;
+    // サイズが0の場合は初期化を遅延
+    const initScene = () => {
+      const width = currentMount.clientWidth;
+      const height = currentMount.clientHeight;
+      
+      if (width === 0 || height === 0) {
+        // 次のフレームで再試行
+        requestAnimationFrame(initScene);
+        return;
+      }
 
     // シーン作成
     const scene = new THREE.Scene();
@@ -94,23 +102,48 @@ export const useThreeScene = ({ processedImage, previewRotation }: UseThreeScene
     controlsRef.current = controls;
 
     setIsSceneReady(true);
+    };
+    
+    initScene();
 
     // クリーンアップ
     return () => {
       setIsSceneReady(false);
-      if (currentMount && renderer.domElement) {
-        currentMount.removeChild(renderer.domElement);
+      if (currentMount && rendererRef.current?.domElement) {
+        currentMount.removeChild(rendererRef.current.domElement);
       }
-      renderer.dispose();
-      geometry.dispose();
-      material.dispose();
-      controls.dispose();
+      rendererRef.current?.dispose();
+      sceneRef.current = null;
+      cameraRef.current = null;
+      cubeRef.current = null;
+      controlsRef.current?.dispose();
+      controlsRef.current = null;
     };
   }, [webGLError]);
 
   // テクスチャ適用
   useEffect(() => {
-    if (!processedImage || !cubeRef.current || !rendererRef.current) return;
+    if (!cubeRef.current) return;
+
+    // processedImageがnullの場合、デフォルトのワイヤーフレームマテリアルに戻す
+    if (!processedImage) {
+      const material = new THREE.MeshBasicMaterial({
+        color: 0x00ff00,
+        wireframe: true
+      });
+      
+      // 古いマテリアルを破棄
+      if (cubeRef.current.material instanceof THREE.Material) {
+        // テクスチャがある場合はそれも破棄
+        if ('map' in cubeRef.current.material && cubeRef.current.material.map) {
+          (cubeRef.current.material.map as THREE.Texture).dispose();
+        }
+        cubeRef.current.material.dispose();
+      }
+      
+      cubeRef.current.material = material;
+      return;
+    }
 
     try {
       // ImageDataからテクスチャを作成

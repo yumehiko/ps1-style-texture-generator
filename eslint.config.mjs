@@ -50,7 +50,11 @@ export default [
         Blob: 'readonly',
         Window: 'readonly',
         HTMLImageElement: 'readonly',
-        Event: 'readonly'
+        Event: 'readonly',
+        HTMLCanvasElement: 'readonly',
+        requestAnimationFrame: 'readonly',
+        cancelAnimationFrame: 'readonly',
+        HTMLDivElement: 'readonly'
       }
     },
     settings: {

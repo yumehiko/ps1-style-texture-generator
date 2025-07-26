@@ -3,17 +3,19 @@ import { AppProvider, useAppContext } from './contexts'
 import { ProcessingParams } from './types/processing'
 import {
   ImageInput,
-  ImagePreview,
+  Preview2D,
   Preview3D,
   ParameterControls,
   SaveButton
 } from './components'
+import { useSaveImage } from './hooks'
 import './styles/globals.css'
 
 const AppContent: React.FC = () => {
   const { state, dispatch } = useAppContext()
   const [previewUrl, setPreviewUrl] = useState<string | null>(null)
   const [localError, setLocalError] = useState<string | null>(null)
+  const { handleSave, isSaving, saveMessage, canSave } = useSaveImage()
   
   // 一時的なファイル処理ハンドラー（後でfileServiceに移動）
   const handleFileSelect = useCallback((file: File) => {
@@ -88,7 +90,7 @@ const AppContent: React.FC = () => {
             </div>
             <div className="panel-content preview-container">
               <div className="preview-2d">
-                <ImagePreview />
+                <Preview2D />
               </div>
               <div className="preview-3d">
                 <Preview3D />
@@ -104,7 +106,12 @@ const AppContent: React.FC = () => {
           <span className="separator">|</span>
           <span>SYSTEM OK</span>
         </div>
-        <SaveButton />
+        <SaveButton 
+          onSave={handleSave}
+          isSaving={isSaving}
+          isDisabled={!canSave || isSaving}
+          message={saveMessage}
+        />
       </footer>
     </div>
   )

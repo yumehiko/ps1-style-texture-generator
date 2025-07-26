@@ -1,2 +1,5 @@
 export { useImageProcessor } from './useImageProcessor'
 export { useThreeScene } from './useThreeScene'
+export { useSaveImage } from './useSaveImage'
+export { useCanvas } from './useCanvas'
+export type { SaveMessage } from './useSaveImage'

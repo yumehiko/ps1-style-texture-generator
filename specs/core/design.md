@@ -80,7 +80,7 @@ src/
 │   │
 │   ├── components/        # UIコンポーネント
 │   │   ├── ImageInput/    # 画像入力コンポーネント
-│   │   ├── ImagePreview/  # 2D画像プレビュー
+│   │   ├── Preview2D/     # 2D画像プレビュー
 │   │   ├── Preview3D/     # 3Dプレビューコンポーネント
 │   │   ├── ParameterControls/ # パラメータ調整UI
 │   │   └── SaveButton/    # 保存機能
@@ -99,7 +99,9 @@ src/
 │   │   └── imageProcessing.worker.ts
 │   │
 │   ├── hooks/             # カスタムReactフック
+│   │   ├── useCanvas.ts
 │   │   ├── useImageProcessor.ts
+│   │   ├── useSaveImage.ts
 │   │   └── useThreeScene.ts
 │   │
 │   ├── styles/            # グローバルスタイル
@@ -126,7 +128,7 @@ src/
 ### 実装状況（2025-07-26 更新）
 
 以下のディレクトリ構造とファイルは作成済み：
-- **components/**: ImageInput, ImagePreview, Preview3D, ParameterControls, SaveButton（空のコンポーネント）
+- **components/**: ImageInput, Preview2D, Preview3D, ParameterControls, SaveButton（空のコンポーネント）
 - **hooks/**: useImageProcessor, useThreeScene（空のhook）
 - **services/**: imageProcessor, fileService, previewService（空のサービス）
 - **types/**: image, processing, ui（基本的な型定義）

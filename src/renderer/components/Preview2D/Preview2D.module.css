@@ -1,0 +1,153 @@
+.preview-2d-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ローディング状態 */
+.preview-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  gap: var(--spacing-sm);
+}
+
+.loading-text {
+  font-size: var(--font-size-header);
+  color: var(--color-text-primary);
+  letter-spacing: 0.2em;
+}
+
+.loading-dots {
+  font-size: var(--font-size-header);
+  color: var(--color-text-primary);
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* エラー状態 */
+.preview-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  gap: var(--spacing-sm);
+  text-align: center;
+  padding: var(--spacing-md);
+}
+
+.error-icon {
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  line-height: 40px;
+  font-size: 24px;
+  color: var(--color-accent-error);
+  border: 2px solid var(--color-accent-error);
+  border-radius: 50%;
+  margin-bottom: var(--spacing-sm);
+  animation: blink 1s infinite;
+}
+
+.error-text {
+  font-size: var(--font-size-header);
+  color: var(--color-accent-error);
+  letter-spacing: 0.2em;
+}
+
+.error-message {
+  font-size: var(--font-size-small);
+  color: var(--color-text-secondary);
+  margin-top: var(--spacing-xs);
+  max-width: 80%;
+  word-wrap: break-word;
+}
+
+/* 空の状態 */
+.preview-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  gap: var(--spacing-xs);
+}
+
+.empty-text {
+  font-size: var(--font-size-header);
+  color: var(--color-text-inactive);
+  letter-spacing: 0.2em;
+}
+
+.empty-subtext {
+  font-size: var(--font-size-small);
+  color: var(--color-text-inactive);
+  letter-spacing: 0.1em;
+}
+
+/* Canvas表示 */
+.preview-canvas-wrapper {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: var(--spacing-md);
+}
+
+.preview-canvas {
+  display: block;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+  border: 1px solid var(--color-accent-border);
+  box-shadow: 0 0 20px rgba(0, 255, 0, 0.2);
+}
+
+/* 画像情報表示 */
+.preview-info {
+  padding: var(--spacing-sm) var(--spacing-md);
+  background-color: var(--color-bg-secondary);
+  border-top: 1px solid var(--color-accent-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  font-size: var(--font-size-small);
+  color: var(--color-text-secondary);
+  letter-spacing: 0.1em;
+}
+
+.info-item {
+  display: inline-block;
+}
+
+.info-separator {
+  color: var(--color-text-inactive);
+}
+
+/* レスポンシブ対応 */
+@media (max-height: 600px) {
+  .preview-canvas-wrapper {
+    padding: var(--spacing-sm);
+  }
+  
+  .preview-info {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    font-size: var(--font-size-small);
+  }
+}

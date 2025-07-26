@@ -1,5 +1,5 @@
 export { ImageInput } from './ImageInput'
-export { ImagePreview } from './ImagePreview'
+export { Preview2D } from './Preview2D'
 export { Preview3D } from './Preview3D'
 export { ParameterControls } from './ParameterControls'
 export { SaveButton } from './SaveButton'

@@ -144,7 +144,7 @@ describe('ImageProcessorService', () => {
       // プログレス更新をシミュレート
       if (messageHandler) {
         [10, 30, 60, 100].forEach((progress) => {
-          messageHandler({
+          messageHandler?.({
             data: {
               type: 'progress',
               id: requestId,

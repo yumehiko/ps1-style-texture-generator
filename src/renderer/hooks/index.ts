@@ -1,2 +1,2 @@
-export { default as useImageProcessor } from './useImageProcessor'
-export { default as useThreeScene } from './useThreeScene'
+export { useImageProcessor } from './useImageProcessor'
+export { useThreeScene } from './useThreeScene'

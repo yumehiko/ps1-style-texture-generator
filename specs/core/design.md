@@ -104,6 +104,18 @@ src/
     └── icons/
 ```
 
+### 実装状況（2025-07-26 更新）
+
+以下のディレクトリ構造とファイルは作成済み：
+- **components/**: ImageInput, ImagePreview, Preview3D, ParameterControls, SaveButton（空のコンポーネント）
+- **hooks/**: useImageProcessor, useThreeScene（空のhook）
+- **services/**: imageProcessor, fileService, previewService（空のサービス）
+- **types/**: image, processing, ui（基本的な型定義）
+- **utils/**: validation, helpers（空のユーティリティ）
+- 各ディレクトリにindex.tsファイルを配置し、named exportで各モジュールを公開
+
+**注意**: 現在は構造のみ作成済みで、実際の機能実装はこれから行う。
+
 ### 必要なクラス/モジュール
 - **ImageProcessor**: 画像処理の中核クラス
 - **DragDropHandler**: ドラッグ&ドロップ処理

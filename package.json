@@ -1,7 +1,6 @@
 {
   "name": "ps1-style-texture-generator",
   "version": "1.0.0",
-  "type": "module",
   "main": "dist/main/index.js",
   "scripts": {
     "dev": "concurrently \"npm run dev:vite\" \"npm run dev:electron\"",

@@ -157,3 +157,133 @@ input[type="range"]::-moz-range-thumb {
   min-height: 100vh;
   background-color: var(--color-bg-primary);
 }
+
+/* App Layout */
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  text-transform: uppercase;
+}
+
+#root {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-header {
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-bg-secondary);
+  border-bottom: var(--border-width) solid var(--color-accent-border);
+  -webkit-app-region: drag; /* ヘッダー全体をドラッグ可能に */
+  user-select: none;
+}
+
+.app-title {
+  font-size: 24px;
+  font-weight: bold;
+  color: var(--color-text-primary);
+  margin: 0;
+  margin-top: 4px; /* 4px下に調整 */
+  letter-spacing: 0.2em;
+  text-shadow: 0 0 10px var(--color-text-primary);
+}
+
+.app-subtitle {
+  font-size: var(--font-size-small);
+  color: var(--color-text-secondary);
+  margin-top: var(--spacing-xs);
+  letter-spacing: 0.1em;
+}
+
+.app-main {
+  flex: 1;
+  overflow: hidden;
+  padding: var(--spacing-md);
+}
+
+.app-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-md);
+  height: 100%;
+}
+
+/* Panel Styles */
+.panel {
+  background-color: var(--color-bg-panel);
+  border: var(--border-width) solid var(--color-accent-border);
+  border-radius: var(--border-radius);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.panel-header {
+  padding: var(--spacing-sm) var(--spacing-md);
+  background-color: var(--color-bg-secondary);
+  border-bottom: var(--border-width) solid var(--color-accent-border);
+}
+
+.panel-header h2 {
+  font-size: var(--font-size-base);
+  font-weight: bold;
+  margin: 0;
+  letter-spacing: 0.1em;
+}
+
+.panel-content {
+  flex: 1;
+  padding: var(--spacing-md);
+  overflow-y: auto;
+}
+
+.panel-actions {
+  padding: var(--spacing-md);
+  border-top: var(--border-width) solid var(--color-accent-border);
+  background-color: var(--color-bg-secondary);
+}
+
+/* Preview Container */
+.preview-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  height: 100%;
+}
+
+.preview-2d,
+.preview-3d {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-bg-primary);
+  border: var(--border-width) dashed var(--color-text-inactive);
+  border-radius: var(--border-radius);
+  position: relative;
+}
+
+/* Footer */
+.app-footer {
+  padding: var(--spacing-sm) var(--spacing-md);
+  background-color: var(--color-bg-secondary);
+  border-top: var(--border-width) solid var(--color-accent-border);
+}
+
+.status-bar {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  font-size: var(--font-size-small);
+  color: var(--color-text-secondary);
+}
+
+.separator {
+  color: var(--color-text-inactive);
+}

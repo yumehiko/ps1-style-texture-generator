@@ -36,7 +36,11 @@ export default [
         ImageData: 'readonly',
         performance: 'readonly',
         Buffer: 'readonly',
-        global: 'readonly'
+        global: 'readonly',
+        self: 'readonly',
+        Worker: 'readonly',
+        DedicatedWorkerGlobalScope: 'readonly',
+        MessageEvent: 'readonly'
       }
     },
     settings: {

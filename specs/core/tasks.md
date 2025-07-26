@@ -66,7 +66,7 @@
 
 ### サービス層実装
 
-- [ ] 7. Web Worker実装
+- [x] 7. Web Worker実装
   - src/renderer/workers/imageProcessing.worker.ts作成
   - 画像処理パイプラインの実装
   - メインスレッドとの通信プロトコル定義
@@ -95,7 +95,7 @@
 
 ### UIコンポーネント実装
 
-- [ ] 10. ルートコンポーネントと状態管理の実装
+- [x] 10. ルートコンポーネントと状態管理の実装
   - src/renderer/App.tsx作成
   - React Context APIによる状態管理設定
   - useReducerによるアプリケーション状態管理

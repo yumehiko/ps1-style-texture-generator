@@ -1,5 +1,5 @@
-import React from 'react'
-import { AppProvider } from './contexts'
+import React, { useState, useCallback } from 'react'
+import { AppProvider, useAppContext } from './contexts'
 import {
   ImageInput,
   ImagePreview,
@@ -10,6 +10,28 @@ import {
 import './styles/globals.css'
 
 const AppContent: React.FC = () => {
+  const { state } = useAppContext()
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null)
+  const [localError, setLocalError] = useState<string | null>(null)
+  
+  // 一時的なファイル処理ハンドラー（後でfileServiceに移動）
+  const handleFileSelect = useCallback((file: File) => {
+    console.log('File selected:', file.name)
+    // TODO: ここでfileServiceを呼び出して画像を処理する
+    // 現在は単純にプレビューURLを作成するだけ
+    const url = URL.createObjectURL(file)
+    setPreviewUrl(url)
+    setLocalError(null)
+  }, [])
+  
+  const handleRemove = useCallback(() => {
+    if (previewUrl) {
+      URL.revokeObjectURL(previewUrl)
+      setPreviewUrl(null)
+    }
+    setLocalError(null)
+  }, [previewUrl])
+  
   return (
     <div className="app">
       <header className="app-header">
@@ -24,7 +46,15 @@ const AppContent: React.FC = () => {
               <h2>INPUT</h2>
             </div>
             <div className="panel-content">
-              <ImageInput />
+              <ImageInput 
+                imageUrl={previewUrl}
+                imageWidth={state.originalImage?.width}
+                imageHeight={state.originalImage?.height}
+                isLoading={state.isProcessing}
+                error={localError || state.error}
+                onFileSelect={handleFileSelect}
+                onRemove={handleRemove}
+              />
             </div>
             
             <div className="panel-header">

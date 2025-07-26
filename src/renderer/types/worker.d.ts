@@ -13,3 +13,11 @@ declare module '*?worker&inline' {
   };
   export default workerConstructor;
 }
+
+// 特定のWorkerファイルの型定義
+declare module '../workers/imageProcessing.worker.ts?worker' {
+  const workerConstructor: {
+    new (): Worker;
+  };
+  export default workerConstructor;
+}

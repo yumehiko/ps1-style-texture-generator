@@ -28,6 +28,7 @@ export default [
         document: 'readonly',
         window: 'readonly',
         HTMLElement: 'readonly',
+        HTMLInputElement: 'readonly',
         console: 'readonly',
         setTimeout: 'readonly',
         require: 'readonly',
@@ -40,7 +41,13 @@ export default [
         self: 'readonly',
         Worker: 'readonly',
         DedicatedWorkerGlobalScope: 'readonly',
-        MessageEvent: 'readonly'
+        MessageEvent: 'readonly',
+        ErrorEvent: 'readonly',
+        File: 'readonly',
+        FileReader: 'readonly',
+        Image: 'readonly',
+        URL: 'readonly',
+        Blob: 'readonly'
       }
     },
     settings: {

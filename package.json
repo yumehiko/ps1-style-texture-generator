@@ -55,17 +55,47 @@
     "three": "^0.178.0"
   },
   "build": {
-    "appId": "com.example.ps1-texture-generator",
+    "appId": "com.ps1texture.generator",
     "productName": "PS1 Style Texture Generator",
     "directories": {
       "output": "release"
     },
     "files": [
-      "dist/**/*"
+      "dist/**/*",
+      "!dist/**/*.map",
+      "!**/*.ts",
+      "!**/test/**",
+      "!**/*.test.*"
     ],
     "mac": {
       "category": "public.app-category.graphics-design",
-      "target": "dmg"
-    }
+      "target": [
+        {
+          "target": "dmg",
+          "arch": ["x64", "arm64"]
+        }
+      ],
+      "icon": "src/assets/icon.icns",
+      "hardenedRuntime": true,
+      "gatekeeperAssess": false,
+      "entitlements": "build/entitlements.mac.plist",
+      "entitlementsInherit": "build/entitlements.mac.plist"
+    },
+    "dmg": {
+      "contents": [
+        {
+          "x": 130,
+          "y": 220
+        },
+        {
+          "x": 410,
+          "y": 220,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ],
+      "title": "PS1 Style Texture Generator ${version}"
+    },
+    "electronVersion": "28.3.3"
   }
 }

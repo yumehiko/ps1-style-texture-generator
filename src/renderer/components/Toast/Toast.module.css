@@ -1,7 +1,7 @@
 .container {
   position: fixed;
-  top: 20px;
-  right: 20px;
+  top: 88px;
+  right: 24px;
   z-index: 9999;
   display: flex;
   flex-direction: column;
@@ -93,6 +93,16 @@
   color: var(--secondary-text);
   font-family: var(--font-mono);
   font-style: normal;
+}
+
+/* Warning style */
+.warning {
+  border-color: #ffeb3b;
+  color: #ffeb3b;
+}
+
+.warning .icon {
+  color: #ffeb3b;
 }
 
 /* Animation for removal */

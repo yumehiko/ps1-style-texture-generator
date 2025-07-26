@@ -5,6 +5,7 @@
   flex-direction: column;
   position: relative;
   overflow: hidden;
+  cursor: pointer;
 }
 
 /* ローディング状態 */
@@ -103,11 +104,22 @@
 .preview-canvas-wrapper {
   flex: 1;
   display: flex;
+  padding: var(--spacing-md);
+  width: 100%;
+}
+
+/* 小さい画像の場合：中央配置 */
+.preview-canvas-wrapper.center-mode {
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  padding: var(--spacing-md);
-  width: 100%;
+}
+
+/* 大きい画像の場合：上端配置でスクロール可能 */
+.preview-canvas-wrapper.scroll-mode {
+  align-items: flex-start;
+  justify-content: center;
+  overflow: auto;
 }
 
 .preview-canvas {
@@ -141,6 +153,22 @@
 
 .info-separator {
   color: var(--color-text-inactive);
+}
+
+/* ズームインジケーター */
+.zoom-indicator {
+  position: absolute;
+  top: var(--spacing-sm);
+  left: var(--spacing-sm);
+  font-size: var(--font-size-small);
+  color: var(--color-text-secondary);
+  background-color: rgba(0, 0, 0, 0.8);
+  padding: 2px 6px;
+  border: 1px solid var(--color-accent-border);
+  border-radius: 2px;
+  letter-spacing: 0.05em;
+  z-index: 10;
+  pointer-events: none;
 }
 
 /* レスポンシブ対応 */

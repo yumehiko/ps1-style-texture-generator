@@ -4,9 +4,10 @@ import { useState, useCallback, useRef, useEffect } from 'react'
 interface UseDragDropOptions {
   onFileSelect?: (file: File) => void
   acceptedTypes?: string[]
+  onInvalidFile?: (file: File) => void
 }
 
-export const useDragDrop = ({ onFileSelect, acceptedTypes }: UseDragDropOptions) => {
+export const useDragDrop = ({ onFileSelect, acceptedTypes, onInvalidFile }: UseDragDropOptions) => {
   const [isDragging, setIsDragging] = useState(false)
   const dragCounter = useRef(0)
 
@@ -75,6 +76,9 @@ export const useDragDrop = ({ onFileSelect, acceptedTypes }: UseDragDropOptions)
     if (acceptedTypes && acceptedTypes.length > 0) {
       const isAccepted = acceptedTypes.includes(file.type)
       if (!isAccepted) {
+        if (onInvalidFile) {
+          onInvalidFile(file)
+        }
         return
       }
     }
@@ -82,7 +86,7 @@ export const useDragDrop = ({ onFileSelect, acceptedTypes }: UseDragDropOptions)
     if (onFileSelect) {
       onFileSelect(file)
     }
-  }, [onFileSelect, acceptedTypes])
+  }, [onFileSelect, acceptedTypes, onInvalidFile])
 
   useEffect(() => {
     // document全体にイベントリスナーを追加

@@ -3,7 +3,7 @@ import styles from './Toast.module.css';
 
 export interface ToastMessage {
   id: string;
-  type: 'success' | 'error' | 'info';
+  type: 'success' | 'error' | 'info' | 'warning';
   message: string;
   autoClose?: boolean;
   duration?: number;
@@ -41,6 +41,7 @@ export const Toast: React.FC<ToastProps> = ({ toast, onClose }) => {
           {toast.type === 'success' && '✓'}
           {toast.type === 'error' && '✗'}
           {toast.type === 'info' && 'i'}
+          {toast.type === 'warning' && '!'}
         </span>
         <span className={styles.message}>{toast.message}</span>
       </div>

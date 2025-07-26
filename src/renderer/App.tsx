@@ -21,7 +21,7 @@ const AppContent: React.FC = () => {
   const { state, dispatch } = useAppContext()
   const { handleSave, isSaving, saveMessage, canSave } = useSaveImage()
   const { clearError } = useImageProcessor()
-  const { toasts, showSuccess, showError, removeToast } = useToast()
+  const { toasts, showSuccess, showError, showWarning, removeToast } = useToast()
   
   // ファイル選択処理（ダイアログ経由）
   const handleFileDialog = useCallback(async () => {
@@ -44,11 +44,7 @@ const AppContent: React.FC = () => {
       // ファイル形式チェック
       const acceptedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp']
       if (!acceptedTypes.includes(file.type)) {
-        dispatch({ type: 'SET_ERROR', payload: {
-          key: 'FILE_INVALID_FORMAT',
-          message: ErrorMessages.FILE_INVALID_FORMAT,
-          recoverable: true
-        }})
+        showWarning(`${file.name} は対応していないファイル形式です。JPEG、PNG、GIF、WebPファイルを選択してください。`)
         return
       }
       
@@ -102,7 +98,7 @@ const AppContent: React.FC = () => {
     } catch (error) {
       dispatch({ type: 'SET_ERROR', payload: getErrorInfo(error) })
     }
-  }, [dispatch])
+  }, [dispatch, showWarning])
   
   // 画像削除処理
   const handleRemove = useCallback(() => {
@@ -130,7 +126,10 @@ const AppContent: React.FC = () => {
   // ドラッグ&ドロップの設定
   const { isDragging } = useDragDrop({
     onFileSelect: handleFileSelect,
-    acceptedTypes: ['image/jpeg', 'image/png', 'image/gif', 'image/webp']
+    acceptedTypes: ['image/jpeg', 'image/png', 'image/gif', 'image/webp'],
+    onInvalidFile: (file) => {
+      showWarning(`${file.name} は対応していないファイル形式です。JPEG、PNG、GIF、WebPファイルを選択してください。`)
+    }
   })
   
   // 保存メッセージの変更を監視してトーストを表示
@@ -138,11 +137,13 @@ const AppContent: React.FC = () => {
     if (saveMessage) {
       if (saveMessage.type === 'success') {
         showSuccess(saveMessage.text)
+      } else if (saveMessage.type === 'warning') {
+        showWarning(saveMessage.text)
       } else {
         showError(saveMessage.text)
       }
     }
-  }, [saveMessage, showSuccess, showError])
+  }, [saveMessage, showSuccess, showError, showWarning])
   
   // ObjectURLのクリーンアップ
   useEffect(() => {

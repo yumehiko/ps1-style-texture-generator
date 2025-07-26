@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { useAppContext } from '../../contexts';
 import { useCanvas } from '../../hooks/useCanvas';
 import { LoadingOverlay } from '../LoadingOverlay';
@@ -8,6 +8,29 @@ export const Preview2D: React.FC = () => {
   const { state } = useAppContext();
   const { processedImage, isProcessing, error } = state;
   const canvasRef = useCanvas(processedImage);
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const [needsScroll, setNeedsScroll] = useState(false);
+  
+  // ズームレベルの管理 (100%, 200%, 400%)
+  const [zoomIndex, setZoomIndex] = useState(1); // デフォルトを200%に
+  const zoomLevels = [1, 2, 4];
+  const currentZoom = zoomLevels[zoomIndex];
+  
+  const handleClick = useCallback(() => {
+    setZoomIndex((prev) => (prev + 1) % zoomLevels.length);
+  }, [zoomLevels.length]);
+  
+  // 画像サイズとコンテナサイズを比較してスクロールが必要か判定
+  useEffect(() => {
+    if (wrapperRef.current && processedImage) {
+      const wrapperRect = wrapperRef.current.getBoundingClientRect();
+      const imageWidth = processedImage.width * currentZoom;
+      const imageHeight = processedImage.height * currentZoom;
+      
+      // 画像がコンテナより大きい場合はスクロールが必要
+      setNeedsScroll(imageWidth > wrapperRect.width || imageHeight > wrapperRect.height);
+    }
+  }, [processedImage, currentZoom]);
 
   // ローディング状態（LoadingOverlayはposition:absoluteなので親要素内に表示）
 
@@ -38,19 +61,22 @@ export const Preview2D: React.FC = () => {
 
   // 画像表示
   return (
-    <div className={styles['preview-2d-container']}>
+    <div className={styles['preview-2d-container']} onClick={handleClick}>
       <LoadingOverlay 
         isLoading={isProcessing}
         message="画像を処理中..."
       />
-      <div className={styles['preview-canvas-wrapper']}>
+      <div className={styles['zoom-indicator']}>{currentZoom * 100}%</div>
+      <div 
+        ref={wrapperRef}
+        className={`${styles['preview-canvas-wrapper']} ${needsScroll ? styles['scroll-mode'] : styles['center-mode']}`}
+      >
         <canvas
           ref={canvasRef}
           className={styles['preview-canvas']}
           style={{
-            maxWidth: '100%',
-            maxHeight: '100%',
-            objectFit: 'contain'
+            width: processedImage ? `${processedImage.width * currentZoom}px` : 'auto',
+            height: processedImage ? `${processedImage.height * currentZoom}px` : 'auto'
           }}
         />
       </div>

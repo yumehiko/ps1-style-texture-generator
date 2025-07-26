@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react'
+import React, { useCallback } from 'react'
 import styles from './ImageInput.module.css'
 import { ErrorInfo } from '../../utils/errorMessages'
 import { ErrorDisplay } from '../ErrorDisplay'
@@ -28,31 +28,6 @@ export const ImageInput: React.FC<ImageInputProps> = ({
   onOpenDialog,
   onDismissError
 }) => {
-  const [isDragOver, setIsDragOver] = useState(false)
-
-  const handleDragOver = useCallback((e: React.DragEvent) => {
-    e.preventDefault()
-    e.stopPropagation()
-    setIsDragOver(true)
-  }, [])
-
-  const handleDragLeave = useCallback((e: React.DragEvent) => {
-    e.preventDefault()
-    e.stopPropagation()
-    setIsDragOver(false)
-  }, [])
-
-  const handleDrop = useCallback((e: React.DragEvent) => {
-    e.preventDefault()
-    e.stopPropagation()
-    setIsDragOver(false)
-
-    const files = Array.from(e.dataTransfer.files)
-    if (files.length > 0 && onFileSelect) {
-      onFileSelect(files[0])
-    }
-  }, [onFileSelect])
-
   const handleFileSelect = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files
     if (files && files.length > 0 && onFileSelect) {
@@ -79,16 +54,12 @@ export const ImageInput: React.FC<ImageInputProps> = ({
 
   const containerClasses = [
     styles.container,
-    isDragOver && styles.dragOver,
     hasImage && styles.hasImage
   ].filter(Boolean).join(' ')
 
   return (
     <div
       className={containerClasses}
-      onDragOver={handleDragOver}
-      onDragLeave={handleDragLeave}
-      onDrop={handleDrop}
       onClick={handleClick}
       role="button"
       tabIndex={0}

@@ -233,7 +233,7 @@ html, body {
 /* 4x4 Grid Layout */
 .app-grid-4x4 {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   grid-template-rows: 1fr 1fr;
   gap: var(--spacing-md);
   height: 100%;
@@ -243,8 +243,10 @@ html, body {
 
 .grid-cell {
   min-height: 0;
+  min-width: 0;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 
 .grid-cell .panel {

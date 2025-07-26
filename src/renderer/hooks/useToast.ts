@@ -15,7 +15,7 @@ export const useToast = () => {
       message,
       type,
       autoClose: type !== 'error',
-      duration: 3000,
+      duration: type === 'success' ? 3000 : type === 'warning' ? 5000 : type === 'error' ? 0 : 3000,
       ...options,
     };
 
@@ -35,6 +35,10 @@ export const useToast = () => {
     return showToast(message, 'info', options);
   }, [showToast]);
 
+  const showWarning = useCallback((message: string, options?: Partial<Pick<ToastMessage, 'autoClose' | 'duration'>>) => {
+    return showToast(message, 'warning', options);
+  }, [showToast]);
+
   const removeToast = useCallback((id: string) => {
     setToasts((prev) => prev.filter((toast) => toast.id !== id));
   }, []);
@@ -49,6 +53,7 @@ export const useToast = () => {
     showSuccess,
     showError,
     showInfo,
+    showWarning,
     removeToast,
     clearToasts,
   };

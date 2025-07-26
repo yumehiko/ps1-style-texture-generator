@@ -3,7 +3,7 @@ import { useAppContext } from '../contexts'
 import { fileService } from '../services'
 
 export interface SaveMessage {
-  type: 'success' | 'error'
+  type: 'success' | 'error' | 'warning'
   text: string
 }
 
@@ -31,6 +31,12 @@ export const useSaveImage = () => {
           text: `保存完了: ${result.filePath?.split('/').pop() || 'ファイル'}`
         })
         setTimeout(() => setSaveMessage(null), 3000)
+      } else if (!result.error) {
+        // キャンセルの場合
+        setSaveMessage({
+          type: 'warning',
+          text: '保存をキャンセルしました'
+        })
       } else {
         setSaveMessage({
           type: 'error',

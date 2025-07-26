@@ -21,7 +21,8 @@ export const useSaveImage = () => {
     try {
       const result = await fileService.saveImage(
         state.processedImage,
-        state.parameters
+        state.parameters,
+        state.originalFileName || undefined
       )
 
       if (result.success) {

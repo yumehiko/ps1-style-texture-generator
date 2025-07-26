@@ -85,14 +85,27 @@ class FileService {
    */
   async saveImage(
     imageData: ProcessedImageData,
-    _params: ProcessingParams
+    params: ProcessingParams,
+    originalFileName?: string
   ): Promise<SaveImageResult> {
     try {
       // ImageDataをPNG形式のArrayBufferに変換
       const pngData = await this.imageDataToPNG(imageData)
       
+      // デフォルトファイル名を生成
+      let defaultFilename = 'ps1-texture'
+      if (originalFileName) {
+        // 拡張子を除いたファイル名を取得
+        const nameWithoutExt = originalFileName.replace(/\.[^/.]+$/, '')
+        defaultFilename = nameWithoutExt
+      }
+      
+      // サフィックスを追加
+      const suffix = this.generateFilenameSuffix(params, imageData)
+      defaultFilename = `${defaultFilename}${suffix}.png`
+      
       // Electron APIでファイル保存
-      const result = await window.electronAPI.saveFile(pngData)
+      const result = await window.electronAPI.saveFile(pngData, defaultFilename)
       
       if (result.canceled) {
         // キャンセルは正常な操作なのでエラーとして扱わない
@@ -209,12 +222,11 @@ class FileService {
   
   /**
    * ファイル名サフィックスを生成
-   * 形式: _長辺px数_色数
-   * @internal 将来の実装で使用予定
+   * 形式: _色数_サイズ (例: _16_128)
    */
-  public generateFilenameSuffix(_params: ProcessingParams, _imageData: ProcessedImageData): string {
-    const longerSide = Math.max(_imageData.width, _imageData.height)
-    return `_${longerSide}px_${_params.colorDepth}colors`
+  public generateFilenameSuffix(params: ProcessingParams, imageData: ProcessedImageData): string {
+    const longerSide = Math.max(imageData.width, imageData.height)
+    return `_${params.colorDepth}_${longerSide}`
   }
 }
 

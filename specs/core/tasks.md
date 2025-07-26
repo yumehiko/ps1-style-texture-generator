@@ -269,7 +269,7 @@
   - ParameterControls.module.cssの更新
   - _要件: 2.2画像変換機能_
 
-- [ ] 27. ファイル保存サフィックスの実装
+- [x] 27. ファイル保存サフィックスの実装
   - fileServiceのgenerateFilenameSuffix修正
   - 「_色数_サイズ」形式のサフィックス生成
   - saveDialogでのファイル名生成ロジック実装

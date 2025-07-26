@@ -9,11 +9,11 @@ export interface SaveFileResult {
 }
 
 export function setupSaveDialog(): void {
-  ipcMain.handle('dialog:saveFile', async (_, data: ArrayBuffer): Promise<SaveFileResult> => {
+  ipcMain.handle('dialog:saveFile', async (_, data: ArrayBuffer, defaultFilename?: string): Promise<SaveFileResult> => {
     try {
       const result = await dialog.showSaveDialog({
         title: 'Save Processed Image',
-        defaultPath: `ps1-texture-${Date.now()}.png`,
+        defaultPath: defaultFilename || `ps1-texture-${Date.now()}.png`,
         filters: [
           { name: 'PNG Image', extensions: ['png'] },
           { name: 'JPEG Image', extensions: ['jpg', 'jpeg'] },

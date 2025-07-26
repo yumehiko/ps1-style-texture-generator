@@ -96,8 +96,7 @@ describe('FileService', () => {
       const result = await fileService.loadImage()
 
       expect(result.success).toBe(false)
-      expect(result.error?.type).toBe('file-read')
-      expect(result.error?.message).toContain('キャンセル')
+      expect(result.error).toBeUndefined()
     })
 
     it('APIエラーが発生した場合', async () => {
@@ -151,7 +150,7 @@ describe('FileService', () => {
       dithering: true
     }
 
-    it('正常に画像を保存する', async () => {
+    it('正常に画像を保存する（元ファイル名なし）', async () => {
       const mockBlob = new Blob(['test'], { type: 'image/png' })
       mockBlob.arrayBuffer = vi.fn().mockResolvedValue(new ArrayBuffer(4))
       
@@ -168,7 +167,33 @@ describe('FileService', () => {
 
       expect(result.success).toBe(true)
       expect(result.filePath).toBe('/test/output.png')
-      expect(mockElectronAPI.saveFile).toHaveBeenCalledWith(expect.any(ArrayBuffer))
+      expect(mockElectronAPI.saveFile).toHaveBeenCalledWith(
+        expect.any(ArrayBuffer),
+        'ps1-texture_16_100.png'
+      )
+    })
+
+    it('正常に画像を保存する（元ファイル名あり）', async () => {
+      const mockBlob = new Blob(['test'], { type: 'image/png' })
+      mockBlob.arrayBuffer = vi.fn().mockResolvedValue(new ArrayBuffer(4))
+      
+      mockCanvas.toBlob.mockImplementation((callback: (blob: Blob | null) => void) => {
+        callback(mockBlob)
+      })
+
+      mockElectronAPI.saveFile.mockResolvedValue({
+        canceled: false,
+        filePath: '/test/mario_16_100.png'
+      })
+
+      const result = await fileService.saveImage(mockImageData, mockParams, 'mario.jpg')
+
+      expect(result.success).toBe(true)
+      expect(result.filePath).toBe('/test/mario_16_100.png')
+      expect(mockElectronAPI.saveFile).toHaveBeenCalledWith(
+        expect.any(ArrayBuffer),
+        'mario_16_100.png'
+      )
     })
 
     it('保存がキャンセルされた場合', async () => {
@@ -186,8 +211,7 @@ describe('FileService', () => {
       const result = await fileService.saveImage(mockImageData, mockParams)
 
       expect(result.success).toBe(false)
-      expect(result.error?.type).toBe('file-save')
-      expect(result.error?.message).toContain('キャンセル')
+      expect(result.error).toBeUndefined()
     })
 
     it('保存時にAPIエラーが発生した場合', async () => {
@@ -220,6 +244,59 @@ describe('FileService', () => {
       expect(result.success).toBe(false)
       expect(result.error?.type).toBe('file-save')
       expect(result.error?.message).toContain('変換に失敗')
+    })
+  })
+
+  describe('generateFilenameSuffix', () => {
+    it('正しいサフィックスを生成する（横長画像）', () => {
+      const params = {
+        resolution: 256,
+        colorDepth: 16,
+        dithering: true
+      }
+      const imageData = {
+        width: 256,
+        height: 128,
+        data: new Uint8ClampedArray(0)
+      }
+
+      const suffix = fileService.generateFilenameSuffix(params, imageData)
+      
+      expect(suffix).toBe('_16_256')
+    })
+
+    it('正しいサフィックスを生成する（縦長画像）', () => {
+      const params = {
+        resolution: 128,
+        colorDepth: 32,
+        dithering: false
+      }
+      const imageData = {
+        width: 64,
+        height: 128,
+        data: new Uint8ClampedArray(0)
+      }
+
+      const suffix = fileService.generateFilenameSuffix(params, imageData)
+      
+      expect(suffix).toBe('_32_128')
+    })
+
+    it('正しいサフィックスを生成する（正方形画像）', () => {
+      const params = {
+        resolution: 64,
+        colorDepth: 8,
+        dithering: true
+      }
+      const imageData = {
+        width: 64,
+        height: 64,
+        data: new Uint8ClampedArray(0)
+      }
+
+      const suffix = fileService.generateFilenameSuffix(params, imageData)
+      
+      expect(suffix).toBe('_8_64')
     })
   })
 })

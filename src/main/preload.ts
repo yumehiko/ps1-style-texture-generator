@@ -8,7 +8,7 @@ export interface ElectronAPI {
     data?: ArrayBuffer
     error?: string
   }>
-  saveFile: (data: ArrayBuffer) => Promise<{
+  saveFile: (data: ArrayBuffer, defaultFilename?: string) => Promise<{
     canceled: boolean
     filePath?: string
     error?: string
@@ -18,7 +18,7 @@ export interface ElectronAPI {
 
 contextBridge.exposeInMainWorld('electronAPI', {
   openFile: () => ipcRenderer.invoke('dialog:openFile'),
-  saveFile: (data: ArrayBuffer) => ipcRenderer.invoke('dialog:saveFile', data),
+  saveFile: (data: ArrayBuffer, defaultFilename?: string) => ipcRenderer.invoke('dialog:saveFile', data, defaultFilename),
   
   // メニューアクションのリスナー
   onMenuAction: (callback: (action: string) => void) => {

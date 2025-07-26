@@ -7,7 +7,7 @@ export interface ElectronAPI {
     data?: ArrayBuffer
     error?: string
   }>
-  saveFile: (data: ArrayBuffer) => Promise<{
+  saveFile: (data: ArrayBuffer, defaultFilename?: string) => Promise<{
     canceled: boolean
     filePath?: string
     error?: string

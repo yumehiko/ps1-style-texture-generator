@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState, RefObject } from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import type { ImageData } from '../types/image';
+import type { ProcessedImageData } from '../types/image';
 
 interface UseThreeSceneProps {
-  processedImage: ImageData | null;
+  processedImage: ProcessedImageData | null;
   previewRotation: boolean;
 }
 

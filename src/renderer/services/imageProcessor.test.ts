@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
 import { ProcessingParams } from '../types/processing';
+import { ProcessedImageData } from '../types/image';
 
 // モックの設定
 const mockPostMessage = vi.fn();
@@ -51,11 +52,11 @@ describe('ImageProcessorService', () => {
 
   describe('processImage', () => {
     it('should successfully process an image', async () => {
-      const testImageData = new ImageData(
-        new Uint8ClampedArray([255, 0, 0, 255, 0, 255, 0, 255]),
-        2,
-        1
-      );
+      const testImageData: ProcessedImageData = {
+        width: 2,
+        height: 1,
+        data: new Uint8ClampedArray([255, 0, 0, 255, 0, 255, 0, 255])
+      };
 
       const params: ProcessingParams = {
         resolution: 64,
@@ -93,12 +94,20 @@ describe('ImageProcessorService', () => {
       // 結果を確認
       const result = await processPromise;
       expect(result.success).toBe(true);
-      expect(result.data).toEqual(resultData);
+      expect(result.data).toEqual({
+        width: resultData.width,
+        height: resultData.height,
+        data: resultData.data
+      } as ProcessedImageData);
       expect(result.error).toBeUndefined();
     });
 
     it('should handle processing errors', async () => {
-      const testImageData = new ImageData(new Uint8ClampedArray(4), 1, 1);
+      const testImageData: ProcessedImageData = {
+        width: 1,
+        height: 1,
+        data: new Uint8ClampedArray(4)
+      };
       const params: ProcessingParams = {
         resolution: 32,
         colorDepth: 8,
@@ -126,7 +135,11 @@ describe('ImageProcessorService', () => {
     });
 
     it('should report progress updates', async () => {
-      const testImageData = new ImageData(new Uint8ClampedArray(4), 1, 1);
+      const testImageData: ProcessedImageData = {
+        width: 1,
+        height: 1,
+        data: new Uint8ClampedArray(4)
+      };
       const params: ProcessingParams = {
         resolution: 128,
         colorDepth: 32,
@@ -170,7 +183,11 @@ describe('ImageProcessorService', () => {
 
   describe('cancelAllProcessing', () => {
     it('should cancel all pending operations', async () => {
-      const testImageData = new ImageData(new Uint8ClampedArray(4), 1, 1);
+      const testImageData: ProcessedImageData = {
+        width: 1,
+        height: 1,
+        data: new Uint8ClampedArray(4)
+      };
       const params: ProcessingParams = {
         resolution: 256,
         colorDepth: 64,
@@ -196,7 +213,11 @@ describe('ImageProcessorService', () => {
 
   describe('getProcessingCount', () => {
     it('should return the number of active processing tasks', () => {
-      const testImageData = new ImageData(new Uint8ClampedArray(4), 1, 1);
+      const testImageData: ProcessedImageData = {
+        width: 1,
+        height: 1,
+        data: new Uint8ClampedArray(4)
+      };
       const params: ProcessingParams = {
         resolution: 128,
         colorDepth: 16,
@@ -220,7 +241,11 @@ describe('ImageProcessorService', () => {
 
   describe('error handling', () => {
     it('should handle worker errors', async () => {
-      const testImageData = new ImageData(new Uint8ClampedArray(4), 1, 1);
+      const testImageData: ProcessedImageData = {
+        width: 1,
+        height: 1,
+        data: new Uint8ClampedArray(4)
+      };
       const params: ProcessingParams = {
         resolution: 128,
         colorDepth: 16,

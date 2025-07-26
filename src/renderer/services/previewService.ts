@@ -1,13 +1,13 @@
-import type { ImageData } from '../types/image';
+import type { ProcessedImageData } from '../types/image';
 
 interface PreviewData {
-  processedImage: ImageData | null;
+  processedImage: ProcessedImageData | null;
   canvasElement: HTMLCanvasElement | null;
-  textureData: ImageData | null;
+  textureData: ProcessedImageData | null;
 }
 
 interface PreviewUpdateOptions {
-  imageData: ImageData;
+  imageData: ProcessedImageData;
   targetCanvas?: HTMLCanvasElement;
 }
 
@@ -58,7 +58,7 @@ class PreviewService {
   /**
    * Canvasに画像データを描画
    */
-  private async updateCanvas(canvas: HTMLCanvasElement, imageData: ImageData): Promise<void> {
+  private async updateCanvas(canvas: HTMLCanvasElement, imageData: ProcessedImageData): Promise<void> {
     const ctx = canvas.getContext('2d');
     if (!ctx) {
       throw new Error('Could not get 2D context from canvas');
@@ -87,7 +87,7 @@ class PreviewService {
   /**
    * 処理済み画像データを取得
    */
-  getProcessedImage(): ImageData | null {
+  getProcessedImage(): ProcessedImageData | null {
     return this.previewData.processedImage
       ? {
           width: this.previewData.processedImage.width,
@@ -100,7 +100,7 @@ class PreviewService {
   /**
    * 3Dテクスチャ用データを取得
    */
-  getTextureData(): ImageData | null {
+  getTextureData(): ProcessedImageData | null {
     return this.previewData.textureData
       ? {
           width: this.previewData.textureData.width,

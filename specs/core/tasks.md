@@ -167,7 +167,7 @@
 
 ### 統合とカスタムフック
 
-- [ ] 16. 画像処理カスタムフックの実装
+- [x] 16. 画像処理カスタムフックの実装
   - src/renderer/hooks/useImageProcessor.ts作成
   - 画像処理サービスとの連携
   - 処理状態の管理
@@ -185,7 +185,7 @@
   - lint、型チェック、テスト実行
   - _要件: 2.4 3Dプレビュー機能_
 
-- [ ] 18. useCanvasフックの実装
+- [x] 18. useCanvasフックの実装
   - src/renderer/hooks/useCanvas.ts作成
   - Canvas要素の管理
   - 2Dプレビュー用の描画ロジック

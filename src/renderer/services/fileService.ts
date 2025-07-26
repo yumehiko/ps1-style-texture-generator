@@ -1,5 +1,5 @@
 /// <reference types="../types/electron" />
-import type { ImageData } from '../types'
+import type { ProcessedImageData } from '../types'
 import { ProcessingParams } from '../types'
 
 export interface FileServiceError {
@@ -10,7 +10,7 @@ export interface FileServiceError {
 
 export interface LoadImageResult {
   success: boolean
-  data?: ImageData
+  data?: ProcessedImageData
   filePath?: string
   error?: FileServiceError
 }
@@ -60,7 +60,7 @@ class FileService {
         }
       }
       
-      // ArrayBufferからImageDataに変換
+      // ArrayBufferからProcessedImageDataに変換
       const imageData = await this.arrayBufferToImageData(result.data)
       
       return {
@@ -87,7 +87,7 @@ class FileService {
    * @param originalFileName 元のファイル名（オプション）
    */
   async saveImage(
-    imageData: ImageData,
+    imageData: ProcessedImageData,
     _params: ProcessingParams
   ): Promise<SaveImageResult> {
     try {
@@ -134,9 +134,9 @@ class FileService {
   }
   
   /**
-   * ArrayBufferをImageDataに変換
+   * ArrayBufferをProcessedImageDataに変換
    */
-  private async arrayBufferToImageData(buffer: ArrayBuffer): Promise<ImageData> {
+  private async arrayBufferToImageData(buffer: ArrayBuffer): Promise<ProcessedImageData> {
     return new Promise((resolve, reject) => {
       const blob = new Blob([buffer])
       const url = URL.createObjectURL(blob)
@@ -175,9 +175,9 @@ class FileService {
   }
   
   /**
-   * ImageDataをPNG形式のArrayBufferに変換
+   * ProcessedImageDataをPNG形式のArrayBufferに変換
    */
-  private async imageDataToPNG(imageData: ImageData): Promise<ArrayBuffer> {
+  private async imageDataToPNG(imageData: ProcessedImageData): Promise<ArrayBuffer> {
     return new Promise((resolve, reject) => {
       const canvas = document.createElement('canvas')
       canvas.width = imageData.width
@@ -218,7 +218,7 @@ class FileService {
    * 形式: _長辺px数_色数
    * @internal 将来の実装で使用予定
    */
-  public generateFilenameSuffix(_params: ProcessingParams, _imageData: ImageData): string {
+  public generateFilenameSuffix(_params: ProcessingParams, _imageData: ProcessedImageData): string {
     const longerSide = Math.max(_imageData.width, _imageData.height)
     return `_${longerSide}px_${_params.colorDepth}colors`
   }

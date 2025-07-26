@@ -54,7 +54,9 @@ export default [
         HTMLCanvasElement: 'readonly',
         requestAnimationFrame: 'readonly',
         cancelAnimationFrame: 'readonly',
-        HTMLDivElement: 'readonly'
+        HTMLDivElement: 'readonly',
+        CanvasRenderingContext2D: 'readonly',
+        ResizeObserver: 'readonly'
       }
     },
     settings: {

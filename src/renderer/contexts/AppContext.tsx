@@ -1,12 +1,12 @@
 import React, { createContext, useContext, useReducer, ReactNode } from 'react'
 import { ProcessingParams } from '../types/processing'
-import { ImageData } from '../types/image'
+import { ProcessedImageData } from '../types/image'
 
 // アプリケーション全体の状態
 export interface AppState {
   // 画像データ
-  originalImage: ImageData | null
-  processedImage: ImageData | null
+  originalImage: ProcessedImageData | null
+  processedImage: ProcessedImageData | null
   
   // 処理パラメータ
   parameters: ProcessingParams
@@ -22,8 +22,8 @@ export interface AppState {
 
 // アクションタイプ
 export type AppAction =
-  | { type: 'SET_ORIGINAL_IMAGE'; payload: ImageData }
-  | { type: 'SET_PROCESSED_IMAGE'; payload: ImageData | null }
+  | { type: 'SET_ORIGINAL_IMAGE'; payload: ProcessedImageData }
+  | { type: 'SET_PROCESSED_IMAGE'; payload: ProcessedImageData | null }
   | { type: 'UPDATE_PARAMETERS'; payload: Partial<ProcessingParams> }
   | { type: 'SET_PROCESSING'; payload: boolean }
   | { type: 'SET_ERROR'; payload: string | null }

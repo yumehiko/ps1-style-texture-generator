@@ -1,4 +1,5 @@
 import { ProcessingParams } from '../types/processing';
+import { ProcessedImageData } from '../types/image';
 
 // Web Workerのインポート（Vite方式）
 import ImageProcessingWorker from '../workers/imageProcessing.worker.ts?worker';
@@ -26,7 +27,7 @@ export type ProgressCallback = (progress: number) => void;
 // 処理結果の型定義
 export interface ProcessingResult {
   success: boolean;
-  data?: ImageData;
+  data?: ProcessedImageData;
   error?: string;
 }
 
@@ -74,7 +75,13 @@ class ImageProcessorService {
     switch (type) {
       case 'result':
         if (result) {
-          pending.resolve({ success: true, data: result });
+          // ImageDataをProcessedImageDataに変換
+          const processedData: ProcessedImageData = {
+            width: result.width,
+            height: result.height,
+            data: result.data
+          };
+          pending.resolve({ success: true, data: processedData });
         } else {
           pending.resolve({ success: false, error: 'No result data' });
         }
@@ -115,7 +122,7 @@ class ImageProcessorService {
    * 画像を処理
    */
   async processImage(
-    imageData: ImageData,
+    imageData: ProcessedImageData,
     params: ProcessingParams,
     progressCallback?: ProgressCallback
   ): Promise<ProcessingResult> {
@@ -132,10 +139,17 @@ class ImageProcessorService {
       
       try {
         // Workerにメッセージを送信
+        // ProcessedImageDataをImageDataに変換
+        const nativeImageData = new ImageData(
+          new Uint8ClampedArray(imageData.data),
+          imageData.width,
+          imageData.height
+        );
+        
         const request: ProcessingRequest = {
           type: 'process',
           id,
-          imageData: this.cloneImageData(imageData),
+          imageData: this.cloneImageData(nativeImageData),
           params
         };
         

@@ -47,7 +47,10 @@ export default [
         FileReader: 'readonly',
         Image: 'readonly',
         URL: 'readonly',
-        Blob: 'readonly'
+        Blob: 'readonly',
+        Window: 'readonly',
+        HTMLImageElement: 'readonly',
+        Event: 'readonly'
       }
     },
     settings: {

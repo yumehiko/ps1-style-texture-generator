@@ -205,6 +205,8 @@ html, body {
   flex: 1;
   overflow: hidden;
   padding: var(--spacing-md);
+  display: flex;
+  flex-direction: column;
 }
 
 .app-grid {
@@ -212,6 +214,8 @@ html, body {
   grid-template-columns: 1fr 1fr;
   gap: var(--spacing-md);
   height: 100%;
+  flex: 1;
+  min-height: 0;
 }
 
 /* Panel Styles */
@@ -222,6 +226,19 @@ html, body {
   display: flex;
   flex-direction: column;
   overflow: hidden;
+}
+
+.panel-left {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  height: 100%;
+  overflow: hidden;
+}
+
+.panel-right {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 .panel-header {
@@ -238,15 +255,27 @@ html, body {
 }
 
 .panel-content {
-  flex: 1;
   padding: var(--spacing-md);
   overflow-y: auto;
+}
+
+.panel-left .panel-content {
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
+}
+
+.panel-right .panel-content {
+  flex: 1;
+  overflow: hidden;
 }
 
 .panel-actions {
   padding: var(--spacing-md);
   border-top: var(--border-width) solid var(--color-accent-border);
   background-color: var(--color-bg-secondary);
+  display: flex;
+  justify-content: flex-end;
 }
 
 /* Preview Container */
@@ -274,6 +303,9 @@ html, body {
   padding: var(--spacing-sm) var(--spacing-md);
   background-color: var(--color-bg-secondary);
   border-top: var(--border-width) solid var(--color-accent-border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .status-bar {
@@ -286,4 +318,29 @@ html, body {
 
 .separator {
   color: var(--color-text-inactive);
+}
+
+/* Input section specific */
+.input-section {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+.input-section > div:first-child {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.input-section > div:first-child > .panel-content {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.parameters-section {
+  flex-shrink: 0;
 }

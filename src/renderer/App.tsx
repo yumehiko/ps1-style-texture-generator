@@ -1,5 +1,6 @@
 import React, { useState, useCallback } from 'react'
 import { AppProvider, useAppContext } from './contexts'
+import { ProcessingParams } from './types/processing'
 import {
   ImageInput,
   ImagePreview,
@@ -10,7 +11,7 @@ import {
 import './styles/globals.css'
 
 const AppContent: React.FC = () => {
-  const { state } = useAppContext()
+  const { state, dispatch } = useAppContext()
   const [previewUrl, setPreviewUrl] = useState<string | null>(null)
   const [localError, setLocalError] = useState<string | null>(null)
   
@@ -32,6 +33,11 @@ const AppContent: React.FC = () => {
     setLocalError(null)
   }, [previewUrl])
   
+  // パラメータ変更ハンドラー（後でuseImageProcessorフックに移動）
+  const handleParameterChange = useCallback((params: Partial<ProcessingParams>) => {
+    dispatch({ type: 'UPDATE_PARAMETERS', payload: params })
+  }, [dispatch])
+  
   return (
     <div className="app">
       <header className="app-header">
@@ -42,30 +48,36 @@ const AppContent: React.FC = () => {
         <div className="app-grid">
           {/* 左側パネル: 入力とコントロール */}
           <section className="panel panel-left">
-            <div className="panel-header">
-              <h2>INPUT</h2>
-            </div>
-            <div className="panel-content">
-              <ImageInput 
-                imageUrl={previewUrl}
-                imageWidth={state.originalImage?.width}
-                imageHeight={state.originalImage?.height}
-                isLoading={state.isProcessing}
-                error={localError || state.error}
-                onFileSelect={handleFileSelect}
-                onRemove={handleRemove}
-              />
-            </div>
-            
-            <div className="panel-header">
-              <h2>PARAMETERS</h2>
-            </div>
-            <div className="panel-content">
-              <ParameterControls />
-            </div>
-            
-            <div className="panel-actions">
-              <SaveButton />
+            <div className="input-section">
+              <div>
+                <div className="panel-header">
+                  <h2>INPUT</h2>
+                </div>
+                <div className="panel-content">
+                  <ImageInput 
+                    imageUrl={previewUrl}
+                    imageWidth={state.originalImage?.width}
+                    imageHeight={state.originalImage?.height}
+                    isLoading={state.isProcessing}
+                    error={localError || state.error}
+                    onFileSelect={handleFileSelect}
+                    onRemove={handleRemove}
+                  />
+                </div>
+              </div>
+              
+              <div className="parameters-section">
+                <div className="panel-header">
+                  <h2>PARAMETERS</h2>
+                </div>
+                <div className="panel-content">
+                  <ParameterControls 
+                    parameters={state.parameters}
+                    isDisabled={state.isProcessing}
+                    onParameterChange={handleParameterChange}
+                  />
+                </div>
+              </div>
             </div>
           </section>
           
@@ -92,6 +104,7 @@ const AppContent: React.FC = () => {
           <span className="separator">|</span>
           <span>SYSTEM OK</span>
         </div>
+        <SaveButton />
       </footer>
     </div>
   )

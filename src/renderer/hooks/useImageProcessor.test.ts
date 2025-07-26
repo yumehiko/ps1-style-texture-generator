@@ -71,7 +71,7 @@ describe('useImageProcessor', () => {
     it('処理エラーを適切に処理する', async () => {
       const mockResult = {
         success: false,
-        error: 'Processing failed'
+        error: new Error('Processing failed')
       }
       
       vi.mocked(imageProcessor.processImage).mockResolvedValueOnce(mockResult)
@@ -234,7 +234,7 @@ describe('useImageProcessor', () => {
     it('エラーをクリアする', async () => {
       const mockResult = {
         success: false,
-        error: 'Test error'
+        error: new Error('Test error')
       }
       
       vi.mocked(imageProcessor.processImage).mockResolvedValueOnce(mockResult)

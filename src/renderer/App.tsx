@@ -6,10 +6,12 @@ import {
   Preview2D,
   Preview3D,
   ParameterControls,
-  SaveButton
+  SaveButton,
+  HelpOverlay
 } from './components'
-import { useSaveImage, useImageProcessor } from './hooks'
+import { useSaveImage, useImageProcessor, useKeyboardShortcuts } from './hooks'
 import { fileService } from './services'
+import { getErrorInfo, ErrorMessages } from './utils/errorMessages'
 import './styles/globals.css'
 
 const AppContent: React.FC = () => {
@@ -24,13 +26,34 @@ const AppContent: React.FC = () => {
       const fileName = result.filePath ? result.filePath.split('/').pop() : undefined
       dispatch({ type: 'SET_ORIGINAL_IMAGE', payload: { imageData: result.data, fileName } })
     } else if (result.error) {
-      dispatch({ type: 'SET_ERROR', payload: result.error.message })
+      dispatch({ type: 'SET_ERROR', payload: getErrorInfo(result.error) })
     }
   }, [dispatch])
   
   // ファイル選択処理（ドラッグ&ドロップ経由）
   const handleFileSelect = useCallback(async (file: File) => {
     try {
+      // ファイル形式チェック
+      const acceptedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp']
+      if (!acceptedTypes.includes(file.type)) {
+        dispatch({ type: 'SET_ERROR', payload: {
+          key: 'FILE_INVALID_FORMAT',
+          message: ErrorMessages.FILE_INVALID_FORMAT,
+          recoverable: true
+        }})
+        return
+      }
+      
+      // ファイルサイズチェック（50MB）
+      const maxSize = 50 * 1024 * 1024
+      if (file.size > maxSize) {
+        dispatch({ type: 'SET_ERROR', payload: {
+          key: 'FILE_TOO_LARGE',
+          message: ErrorMessages.FILE_TOO_LARGE,
+          recoverable: true
+        }})
+        return
+      }
       const arrayBuffer = await file.arrayBuffer()
       const blob = new Blob([arrayBuffer])
       const url = URL.createObjectURL(blob)
@@ -69,7 +92,7 @@ const AppContent: React.FC = () => {
         img.src = url
       })
     } catch (error) {
-      dispatch({ type: 'SET_ERROR', payload: error instanceof Error ? error.message : '画像の読み込みに失敗しました' })
+      dispatch({ type: 'SET_ERROR', payload: getErrorInfo(error) })
     }
   }, [dispatch])
   
@@ -89,6 +112,13 @@ const AppContent: React.FC = () => {
     handleFileDialog()
   }, [handleFileDialog])
   
+  // キーボードショートカットの設定
+  useKeyboardShortcuts({
+    onOpenFile: handleFileDialog,
+    onSaveFile: canSave ? handleSave : undefined,
+    onReset: handleRemove
+  })
+  
   // ObjectURLのクリーンアップ
   useEffect(() => {
     return () => {
@@ -102,10 +132,10 @@ const AppContent: React.FC = () => {
         <h1 className="app-title">PS1 TEXTURE GENERATOR</h1>
       </header>
       
-      <main className="app-main">
+      <main className="app-main" role="main">
         <div className="app-grid">
           {/* 左側パネル: 入力とコントロール */}
-          <section className="panel panel-left">
+          <section className="panel panel-left" aria-label="入力とパラメータ設定">
             <div className="input-section">
               <div>
                 <div className="panel-header">
@@ -122,6 +152,7 @@ const AppContent: React.FC = () => {
                     onFileSelect={handleFileSelect}
                     onRemove={handleRemove}
                     onOpenDialog={handleOpenFile}
+                    onDismissError={() => dispatch({ type: 'SET_ERROR', payload: null })}
                   />
                 </div>
               </div>
@@ -142,7 +173,7 @@ const AppContent: React.FC = () => {
           </section>
           
           {/* 右側パネル: プレビュー */}
-          <section className="panel panel-right">
+          <section className="panel panel-right" aria-label="プレビュー">
             <div className="panel-header">
               <h2>PREVIEW</h2>
             </div>
@@ -171,6 +202,7 @@ const AppContent: React.FC = () => {
           message={saveMessage}
         />
       </footer>
+      <HelpOverlay />
     </div>
   )
 }

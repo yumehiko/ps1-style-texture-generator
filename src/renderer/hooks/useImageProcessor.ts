@@ -3,6 +3,7 @@ import { useAppContext } from '../contexts/AppContext'
 import { imageProcessor } from '../services/imageProcessor'
 import { ProcessingParams } from '../types/processing'
 import { ProcessedImageData } from '../types/image'
+import { getErrorInfo } from '../utils/errorMessages'
 
 /**
  * 画像処理フック
@@ -42,13 +43,12 @@ export const useImageProcessor = () => {
         lastProcessedParamsRef.current = params
       } else {
         // 処理失敗
-        dispatch({ type: 'SET_ERROR', payload: result.error || '画像処理に失敗しました' })
+        dispatch({ type: 'SET_ERROR', payload: getErrorInfo(result.error) })
         dispatch({ type: 'SET_PROCESSED_IMAGE', payload: null })
       }
     } catch (error) {
       // エラー処理
-      const errorMessage = error instanceof Error ? error.message : '予期しないエラーが発生しました'
-      dispatch({ type: 'SET_ERROR', payload: errorMessage })
+      dispatch({ type: 'SET_ERROR', payload: getErrorInfo(error) })
       dispatch({ type: 'SET_PROCESSED_IMAGE', payload: null })
     }
   }, [dispatch])

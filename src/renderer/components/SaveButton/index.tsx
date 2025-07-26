@@ -33,12 +33,15 @@ export const SaveButton: React.FC<SaveButtonProps> = ({
         onClick={onSave}
         disabled={isDisabled}
         className={buttonClasses}
+        aria-label="画像をPNG形式で保存"
+        aria-busy={isSaving}
+        title="画像をPNG形式で保存 (Cmd/Ctrl + S)"
       >
         {isSaving ? 'SAVING...' : 'EXPORT PNG'}
       </button>
       
       {message && (
-        <div className={messageClasses}>
+        <div className={messageClasses} role="status" aria-live="polite">
           {message.text}
         </div>
       )}

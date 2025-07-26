@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useReducer, ReactNode } from 'react'
 import { ProcessingParams } from '../types/processing'
 import { ProcessedImageData } from '../types/image'
+import { ErrorInfo } from '../utils/errorMessages'
 
 // アプリケーション全体の状態
 export interface AppState {
@@ -14,7 +15,7 @@ export interface AppState {
   
   // UI状態
   isProcessing: boolean
-  error: string | null
+  error: ErrorInfo | null
   
   // プレビュー状態
   preview3DEnabled: boolean
@@ -27,7 +28,7 @@ export type AppAction =
   | { type: 'SET_PROCESSED_IMAGE'; payload: ProcessedImageData | null }
   | { type: 'UPDATE_PARAMETERS'; payload: Partial<ProcessingParams> }
   | { type: 'SET_PROCESSING'; payload: boolean }
-  | { type: 'SET_ERROR'; payload: string | null }
+  | { type: 'SET_ERROR'; payload: ErrorInfo | null }
   | { type: 'TOGGLE_3D_PREVIEW' }
   | { type: 'TOGGLE_ROTATION' }
   | { type: 'RESET' }

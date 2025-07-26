@@ -1,11 +1,12 @@
 import React from 'react';
 import { useAppContext } from '../../contexts';
 import { useThreeScene } from '../../hooks';
+import { LoadingOverlay } from '../LoadingOverlay';
 import styles from './Preview3D.module.css';
 
 export const Preview3D: React.FC = () => {
   const { state } = useAppContext();
-  const { processedImage, previewRotation } = state;
+  const { processedImage, previewRotation, isProcessing } = state;
   
   const { mountRef, webGLError, isSceneReady } = useThreeScene({
     processedImage,
@@ -29,7 +30,11 @@ export const Preview3D: React.FC = () => {
   const showEmptyMessage = !processedImage;
 
   return (
-    <div className={styles['preview-3d-container']}>
+    <div className={styles['preview-3d-container']} style={{ position: 'relative' }}>
+      <LoadingOverlay 
+        isLoading={isProcessing && !!processedImage}
+        message="3Dプレビューを更新中..."
+      />
       <div ref={mountRef} className={styles['preview-3d-mount']} />
       {showEmptyMessage && (
         <div className={styles['preview-3d-empty']}>

@@ -1,5 +1,7 @@
 import React, { useState, useCallback } from 'react'
 import styles from './ImageInput.module.css'
+import { ErrorInfo } from '../../utils/errorMessages'
+import { ErrorDisplay } from '../ErrorDisplay'
 
 interface ImageInputProps {
   hasImage?: boolean
@@ -7,10 +9,11 @@ interface ImageInputProps {
   imageWidth?: number
   imageHeight?: number
   isLoading?: boolean
-  error?: string | null
+  error?: ErrorInfo | null
   onFileSelect?: (file: File) => void
   onRemove?: () => void
   onOpenDialog?: () => void
+  onDismissError?: () => void
 }
 
 export const ImageInput: React.FC<ImageInputProps> = ({
@@ -22,7 +25,8 @@ export const ImageInput: React.FC<ImageInputProps> = ({
   error = null,
   onFileSelect,
   onRemove,
-  onOpenDialog
+  onOpenDialog,
+  onDismissError
 }) => {
   const [isDragOver, setIsDragOver] = useState(false)
 
@@ -88,6 +92,15 @@ export const ImageInput: React.FC<ImageInputProps> = ({
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
       onClick={handleClick}
+      role="button"
+      tabIndex={hasImage ? -1 : 0}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault()
+          handleClick()
+        }
+      }}
+      aria-label={hasImage ? `選択された画像: ${fileName}` : '画像を選択'}
     >
       <input
         type="file"
@@ -113,6 +126,8 @@ export const ImageInput: React.FC<ImageInputProps> = ({
               e.stopPropagation()
               handleClick()
             }}
+            aria-label="ファイルを選択"
+            title="画像ファイルを選択 (Cmd/Ctrl + O)"
           >
             ファイルを選択
           </button>
@@ -140,6 +155,8 @@ export const ImageInput: React.FC<ImageInputProps> = ({
                 e.stopPropagation()
                 onRemove()
               }}
+              aria-label="選択した画像を削除"
+              title="画像を削除 (Cmd/Ctrl + Shift + R)"
             >
               削除
             </button>
@@ -148,7 +165,22 @@ export const ImageInput: React.FC<ImageInputProps> = ({
       )}
 
       {error && (
-        <div className={styles.error}>{error}</div>
+        <ErrorDisplay
+          error={error}
+          onDismiss={onDismissError}
+          onRetry={() => {
+            const input = document.createElement('input')
+            input.type = 'file'
+            input.accept = 'image/*'
+            input.onchange = (e) => {
+              const target = e.target as HTMLInputElement
+              if (target.files && target.files[0] && onFileSelect) {
+                onFileSelect(target.files[0])
+              }
+            }
+            input.click()
+          }}
+        />
       )}
     </div>
   )

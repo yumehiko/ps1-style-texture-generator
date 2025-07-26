@@ -1,6 +1,7 @@
 import React from 'react';
 import { useAppContext } from '../../contexts';
 import { useCanvas } from '../../hooks/useCanvas';
+import { LoadingOverlay } from '../LoadingOverlay';
 import './Preview2D.module.css';
 
 export const Preview2D: React.FC = () => {
@@ -8,17 +9,7 @@ export const Preview2D: React.FC = () => {
   const { processedImage, isProcessing, error } = state;
   const canvasRef = useCanvas(processedImage);
 
-  // ローディング状態
-  if (isProcessing) {
-    return (
-      <div className="preview-2d-container">
-        <div className="preview-loading">
-          <span className="loading-text">PROCESSING</span>
-          <span className="loading-dots">...</span>
-        </div>
-      </div>
-    );
-  }
+  // ローディング状態（LoadingOverlayはposition:absoluteなので親要素内に表示）
 
   // エラー状態
   if (error) {
@@ -27,7 +18,7 @@ export const Preview2D: React.FC = () => {
         <div className="preview-error">
           <span className="error-icon">!</span>
           <span className="error-text">ERROR</span>
-          <span className="error-message">{error}</span>
+          <span className="error-message">{error.message}</span>
         </div>
       </div>
     );
@@ -47,7 +38,11 @@ export const Preview2D: React.FC = () => {
 
   // 画像表示
   return (
-    <div className="preview-2d-container">
+    <div className="preview-2d-container" style={{ position: 'relative' }}>
+      <LoadingOverlay 
+        isLoading={isProcessing}
+        message="画像を処理中..."
+      />
       <div className="preview-canvas-wrapper">
         <canvas
           ref={canvasRef}
@@ -59,15 +54,17 @@ export const Preview2D: React.FC = () => {
           }}
         />
       </div>
-      <div className="preview-info">
-        <span className="info-item">
-          {processedImage.width} × {processedImage.height} PX
-        </span>
-        <span className="info-separator">|</span>
-        <span className="info-item">
-          {state.parameters.colorDepth} COLORS
-        </span>
-      </div>
+      {processedImage && (
+        <div className="preview-info">
+          <span className="info-item">
+            {processedImage.width} × {processedImage.height} PX
+          </span>
+          <span className="info-separator">|</span>
+          <span className="info-item">
+            {state.parameters.colorDepth} COLORS
+          </span>
+        </div>
+      )}
     </div>
   );
 };

@@ -28,7 +28,7 @@ export type ProgressCallback = (progress: number) => void;
 export interface ProcessingResult {
   success: boolean;
   data?: ProcessedImageData;
-  error?: string;
+  error?: Error;
 }
 
 /**
@@ -83,13 +83,13 @@ class ImageProcessorService {
           };
           pending.resolve({ success: true, data: processedData });
         } else {
-          pending.resolve({ success: false, error: 'No result data' });
+          pending.resolve({ success: false, error: new Error('処理結果が取得できませんでした') });
         }
         this.processingQueue.delete(id);
         break;
         
       case 'error':
-        pending.resolve({ success: false, error: error || 'Unknown error' });
+        pending.resolve({ success: false, error: new Error(error || '不明なエラーが発生しました') });
         this.processingQueue.delete(id);
         break;
         
@@ -109,7 +109,7 @@ class ImageProcessorService {
     
     // すべての保留中のリクエストをエラーで終了
     this.processingQueue.forEach((pending) => {
-      pending.reject(new Error('Worker error occurred'));
+      pending.reject(new Error('画像処理ワーカーでエラーが発生しました'));
     });
     this.processingQueue.clear();
     
@@ -127,7 +127,7 @@ class ImageProcessorService {
     progressCallback?: ProgressCallback
   ): Promise<ProcessingResult> {
     if (!this.worker) {
-      return { success: false, error: 'Worker not initialized' };
+      return { success: false, error: new Error('ワーカーが初期化されていません') };
     }
     
     // リクエストIDを生成
@@ -185,7 +185,7 @@ class ImageProcessorService {
    */
   cancelAllProcessing(): void {
     this.processingQueue.forEach((pending) => {
-      pending.resolve({ success: false, error: 'Processing cancelled' });
+      pending.resolve({ success: false, error: new Error('処理がキャンセルされました') });
     });
     this.processingQueue.clear();
   }

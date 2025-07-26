@@ -1,0 +1,87 @@
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(10, 10, 10, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+}
+
+.content {
+  text-align: center;
+  padding: 24px;
+}
+
+.spinner {
+  font-size: 48px;
+  font-family: var(--font-mono);
+  color: var(--color-primary);
+  margin-bottom: 16px;
+  display: flex;
+  gap: 4px;
+  justify-content: center;
+}
+
+.dot1, .dot2, .dot3 {
+  animation: blink 1.4s infinite;
+}
+
+.dot1 {
+  animation-delay: 0s;
+}
+
+.dot2 {
+  animation-delay: 0.2s;
+}
+
+.dot3 {
+  animation-delay: 0.4s;
+}
+
+@keyframes blink {
+  0%, 60%, 100% {
+    opacity: 0.2;
+  }
+  30% {
+    opacity: 1;
+  }
+}
+
+.message {
+  font-size: 16px;
+  color: var(--color-primary);
+  font-family: var(--font-mono);
+  margin-bottom: 16px;
+}
+
+.progressContainer {
+  margin-top: 16px;
+}
+
+.progressBar {
+  width: 200px;
+  height: 8px;
+  background-color: rgba(0, 255, 0, 0.1);
+  border: 1px solid var(--color-primary);
+  border-radius: 0;
+  overflow: hidden;
+  margin: 0 auto 8px;
+}
+
+.progressFill {
+  height: 100%;
+  background-color: var(--color-primary);
+  transition: width 0.3s ease-out;
+  box-shadow: 0 0 10px var(--color-primary);
+}
+
+.progressText {
+  font-size: 14px;
+  color: var(--color-primary);
+  font-family: var(--font-mono);
+}

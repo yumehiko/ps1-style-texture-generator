@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react'
 import { ProcessingParams } from '../../types/processing'
+import { Tooltip } from '../Tooltip'
 import styles from './ParameterControls.module.css'
 
 interface ParameterControlsProps {
@@ -56,11 +57,12 @@ export const ParameterControls: React.FC<ParameterControlsProps> = ({
   return (
     <div className={styles.container}>
       {/* 長辺ピクセル数スライダー */}
-      <div className={styles.control}>
-        <div className={styles.label}>
-          <span>{RESOLUTION_CONFIG.label}</span>
-          <span className={styles.value}>{parameters.resolution}</span>
-        </div>
+      <Tooltip content="画像の長辺の最大ピクセル数を設定します。アスペクト比は維持されます。">
+        <div className={styles.control}>
+          <div className={styles.label}>
+            <span>{RESOLUTION_CONFIG.label}</span>
+            <span className={styles.value}>{parameters.resolution}</span>
+          </div>
         <div className={styles.slider}>
           <div className={styles.sliderTrack} />
           <div 
@@ -96,9 +98,11 @@ export const ParameterControls: React.FC<ParameterControlsProps> = ({
           />
         </div>
       </div>
+      </Tooltip>
 
       {/* 色数選択スライダー */}
-      <div className={styles.control}>
+      <Tooltip content="テクスチャで使用する色数を設定します。低い値でよりレトロな見た目になります。">
+        <div className={styles.control}>
         <div className={styles.label}>
           <span>{COLOR_DEPTH_CONFIG.label}</span>
           <span className={styles.value}>{parameters.colorDepth}</span>
@@ -138,11 +142,13 @@ export const ParameterControls: React.FC<ParameterControlsProps> = ({
           />
         </div>
       </div>
+      </Tooltip>
 
       <div className={styles.divider} />
 
       {/* ディザリングチェックボックス */}
-      <label className={styles.checkbox}>
+      <Tooltip content="Floyd-Steinbergディザリングを適用します。グラデーションをより滑らかに表現できます。" position="bottom">
+        <label className={styles.checkbox}>
         <input
           type="checkbox"
           className={styles.checkboxInput}
@@ -153,6 +159,7 @@ export const ParameterControls: React.FC<ParameterControlsProps> = ({
         <span className={styles.checkboxVisual} />
         <span className={styles.checkboxLabel}>Dithering</span>
       </label>
+      </Tooltip>
     </div>
   )
 }

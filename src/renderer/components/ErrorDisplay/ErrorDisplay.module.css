@@ -1,0 +1,106 @@
+.errorContainer {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px;
+  margin: 16px 0;
+  background-color: rgba(255, 0, 102, 0.1);
+  border: 1px solid var(--color-error);
+  border-radius: 0;
+  font-family: var(--font-mono);
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(-10px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.errorIcon {
+  font-size: 24px;
+  color: var(--color-error);
+  flex-shrink: 0;
+}
+
+.errorContent {
+  flex: 1;
+  min-width: 0;
+}
+
+.errorMessage {
+  color: var(--color-error);
+  font-size: 14px;
+  line-height: 1.5;
+  margin-bottom: 8px;
+}
+
+.errorDetails {
+  margin-top: 8px;
+}
+
+.errorDetails summary {
+  color: var(--color-error);
+  cursor: pointer;
+  font-size: 12px;
+  opacity: 0.8;
+  user-select: none;
+}
+
+.errorDetails summary:hover {
+  opacity: 1;
+}
+
+.errorDetails code {
+  display: block;
+  margin-top: 8px;
+  padding: 8px;
+  background-color: rgba(0, 0, 0, 0.3);
+  color: var(--color-error);
+  font-size: 12px;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.errorActions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.retryButton,
+.dismissButton {
+  padding: 4px 12px;
+  background-color: transparent;
+  border: 1px solid var(--color-error);
+  color: var(--color-error);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.15s ease-in-out;
+}
+
+.retryButton:hover,
+.dismissButton:hover {
+  background-color: var(--color-error);
+  color: var(--color-background);
+}
+
+.dismissButton {
+  padding: 4px 8px;
+  border: none;
+  font-size: 16px;
+  opacity: 0.6;
+}
+
+.dismissButton:hover {
+  opacity: 1;
+  background-color: transparent;
+  color: var(--color-error);
+}

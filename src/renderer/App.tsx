@@ -9,9 +9,10 @@ import {
   SaveButton,
   ClearButton,
   HelpOverlay,
-  ToastContainer
+  ToastContainer,
+  DragDropOverlay
 } from './components'
-import { useSaveImage, useImageProcessor, useKeyboardShortcuts, useToast } from './hooks'
+import { useSaveImage, useImageProcessor, useKeyboardShortcuts, useToast, useDragDrop } from './hooks'
 import { fileService } from './services'
 import { getErrorInfo, ErrorMessages } from './utils/errorMessages'
 import './styles/globals.css'
@@ -126,6 +127,12 @@ const AppContent: React.FC = () => {
     onReset: handleRemove
   })
   
+  // ドラッグ&ドロップの設定
+  const { isDragging } = useDragDrop({
+    onFileSelect: handleFileSelect,
+    acceptedTypes: ['image/jpeg', 'image/png', 'image/gif', 'image/webp']
+  })
+  
   // 保存メッセージの変更を監視してトーストを表示
   useEffect(() => {
     if (saveMessage) {
@@ -223,6 +230,7 @@ const AppContent: React.FC = () => {
       </footer>
       <HelpOverlay />
       <ToastContainer toasts={toasts} onClose={removeToast} />
+      <DragDropOverlay isVisible={isDragging} />
     </div>
   )
 }

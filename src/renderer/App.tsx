@@ -7,6 +7,7 @@ import {
   Preview3D,
   ParameterControls,
   SaveButton,
+  ClearButton,
   HelpOverlay,
   ToastContainer
 } from './components'
@@ -207,6 +208,10 @@ const AppContent: React.FC = () => {
       </main>
       
       <footer className="app-footer">
+        <ClearButton 
+          onClear={handleRemove}
+          isDisabled={!state.originalImage}
+        />
         <div className="status-bar">
           <span>READY</span>
           <span className="separator">|</span>
@@ -216,7 +221,6 @@ const AppContent: React.FC = () => {
           onSave={handleSave}
           isSaving={isSaving}
           isDisabled={!canSave || isSaving}
-          message={saveMessage}
         />
       </footer>
       <HelpOverlay />

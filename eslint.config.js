@@ -32,7 +32,11 @@ export default [
         setTimeout: 'readonly',
         require: 'readonly',
         module: 'readonly',
-        exports: 'readonly'
+        exports: 'readonly',
+        ImageData: 'readonly',
+        performance: 'readonly',
+        Buffer: 'readonly',
+        global: 'readonly'
       }
     },
     settings: {

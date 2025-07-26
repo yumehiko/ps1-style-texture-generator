@@ -1,1 +1,1 @@
-export * from './ditheringProcessor'
+export * from './DitheringProcessor'

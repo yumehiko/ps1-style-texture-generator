@@ -1,1 +1,1 @@
-export * from './imageResizer'
+export * from './ImageResizer'

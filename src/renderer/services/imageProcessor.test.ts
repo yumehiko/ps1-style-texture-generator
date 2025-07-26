@@ -9,12 +9,14 @@ const mockTerminate = vi.fn();
 
 // モジュールのモック - imageProcessorがインポートされる前に設定
 vi.mock('../workers/imageProcessing.worker.ts?worker', () => {
+  const MockWorker = vi.fn().mockImplementation(() => ({
+    postMessage: mockPostMessage,
+    addEventListener: mockAddEventListener,
+    terminate: mockTerminate
+  }));
+  
   return {
-    default: class MockWorker {
-      postMessage = mockPostMessage;
-      addEventListener = mockAddEventListener;
-      terminate = mockTerminate;
-    }
+    default: MockWorker
   };
 });
 
@@ -130,7 +132,8 @@ describe('ImageProcessorService', () => {
 
       const result = await processPromise;
       expect(result.success).toBe(false);
-      expect(result.error).toBe('Processing failed');
+      expect(result.error).toBeInstanceOf(Error);
+      expect(result.error?.message).toBe('Processing failed');
       expect(result.data).toBeUndefined();
     });
 
@@ -205,9 +208,11 @@ describe('ImageProcessorService', () => {
       const [result1, result2] = await Promise.all([promise1, promise2]);
       
       expect(result1.success).toBe(false);
-      expect(result1.error).toBe('Processing cancelled');
+      expect(result1.error).toBeInstanceOf(Error);
+      expect(result1.error?.message).toBe('処理がキャンセルされました');
       expect(result2.success).toBe(false);
-      expect(result2.error).toBe('Processing cancelled');
+      expect(result2.error).toBeInstanceOf(Error);
+      expect(result2.error?.message).toBe('処理がキャンセルされました');
     });
   });
 
@@ -261,7 +266,7 @@ describe('ImageProcessorService', () => {
       }
 
       // エラーで終了することを確認
-      await expect(promise1).rejects.toThrow('Worker error occurred');
+      await expect(promise1).rejects.toThrow('画像処理ワーカーでエラーが発生しました');
     });
   });
 });

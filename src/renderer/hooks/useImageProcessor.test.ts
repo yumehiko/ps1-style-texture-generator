@@ -91,7 +91,12 @@ describe('useImageProcessor', () => {
       
       const status = result.current.getProcessingStatus()
       expect(status.hasError).toBe(true)
-      expect(status.error).toBe('Processing failed')
+      expect(status.error).toEqual({
+        key: 'UNKNOWN_ERROR',
+        message: '予期しないエラーが発生しました。アプリケーションを再起動してください。',
+        details: 'Processing failed',
+        recoverable: false
+      })
       expect(status.hasProcessedImage).toBe(false)
     })
     
@@ -114,7 +119,12 @@ describe('useImageProcessor', () => {
       
       const status = result.current.getProcessingStatus()
       expect(status.hasError).toBe(true)
-      expect(status.error).toBe('Unexpected error')
+      expect(status.error).toEqual({
+        key: 'UNKNOWN_ERROR',
+        message: '予期しないエラーが発生しました。アプリケーションを再起動してください。',
+        details: 'Unexpected error',
+        recoverable: false
+      })
     })
   })
   

@@ -77,7 +77,9 @@
       ],
       "icon": "src/assets/icon.icns",
       "hardenedRuntime": true,
-      "gatekeeperAssess": false
+      "gatekeeperAssess": false,
+      "identity": null,
+      "notarize": false
     },
     "dmg": {
       "contents": [
@@ -91,13 +93,7 @@
           "type": "link",
           "path": "/Applications"
         }
-      ],
-      "artifactName": "PS1-Style-Texture-Generator-${version}-${arch}.${ext}",
-      "title": "PS1 Style Texture Generator",
-      "window": {
-        "width": 400,
-        "height": 500
-      }
+      ]
     },
     "electronVersion": "28.3.3",
     "publish": {

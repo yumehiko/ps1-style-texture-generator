@@ -25,13 +25,22 @@ jobs:
       - name: Install dependencies
         run: npm ci
       
-      - name: Build
-        run: npm run build
-      
       - name: Build/release Electron app
-        uses: samuelmeuli/action-electron-builder@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CSC_LINK: ${{ secrets.mac_certs }}
+          CSC_KEY_PASSWORD: ${{ secrets.mac_certs_password }}
+        run: |
+          if [ "${{ matrix.os }}" == "macos-latest" ]; then
+            npm run dist -- --mac --publish always
+          elif [ "${{ matrix.os }}" == "windows-latest" ]; then
+            npm run dist -- --win --publish always
+          else
+            npm run dist -- --linux --publish always
+          fi
+      
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          release: ${{ startsWith(github.ref, 'refs/tags/v') }}
-          mac_certs: ${{ secrets.mac_certs }}
-          mac_certs_password: ${{ secrets.mac_certs_password }}
+          name: ${{ matrix.os }}-build
+          path: release/*

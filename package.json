@@ -95,7 +95,8 @@
       "artifactName": "PS1-Style-Texture-Generator-${version}-${arch}.${ext}",
       "title": "PS1 Style Texture Generator",
       "window": {
-        "size": "400x500"
+        "width": 400,
+        "height": 500
       }
     },
     "electronVersion": "28.3.3",

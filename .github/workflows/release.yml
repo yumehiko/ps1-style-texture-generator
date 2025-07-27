@@ -28,8 +28,6 @@ jobs:
       - name: Build/release Electron app
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          CSC_LINK: ${{ secrets.mac_certs }}
-          CSC_KEY_PASSWORD: ${{ secrets.mac_certs_password }}
         run: |
           if [ "${{ matrix.os }}" == "macos-latest" ]; then
             npm run dist -- --mac --publish always

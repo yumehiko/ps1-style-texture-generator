@@ -13,6 +13,9 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest",
     "dist": "npm run build && electron-builder",
+    "dist:mac": "npm run build && electron-builder --mac",
+    "dist:win": "npm run build && electron-builder --win",
+    "dist:win:x64": "npm run build && electron-builder --win --x64",
     "preview": "vite preview"
   },
   "repository": {
@@ -80,6 +83,30 @@
       "gatekeeperAssess": false,
       "identity": null,
       "notarize": false
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "src/assets/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "PS1 Style Texture Generator"
     },
     "dmg": {
       "contents": [

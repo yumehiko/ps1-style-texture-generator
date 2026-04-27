@@ -18,7 +18,7 @@
 
 ### 対応OS
 - macOS（Intel/Apple Silicon）
-- Windows（予定）
+- Windows（x64）
 - Linux（予定）
 
 ## 使い方
@@ -58,6 +58,12 @@ npm run build
 ### アプリケーションのパッケージング
 ```bash
 npm run dist
+```
+
+macOS / Windows を明示してビルドする場合:
+```bash
+npm run dist:mac
+npm run dist:win:x64
 ```
 
 ## 技術スタック
